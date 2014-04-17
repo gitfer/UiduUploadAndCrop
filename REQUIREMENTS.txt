@@ -1,0 +1,14 @@
+Preexisting features
+----------------------------
+Status upload
+Image automatically cropped
+Adding description
+
+Supported formats
+---------------------------
+jpg png bmp gif tiff (nice to have)
+
+Cropped image 150x150
+
+Crop configurable
+Multiple upload
