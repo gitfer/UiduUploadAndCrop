@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  attr_accessible :name
+  attr_accessible :name, :avatar, :crop_x, :crop_y, :crop_w, :crop_h
   has_attached_file :avatar, :styles  => { :small => "100x100#", :large => "500x500>" }
 
   attr_accessor :crop_x, :crop_y, :crop_w, :crop_h
