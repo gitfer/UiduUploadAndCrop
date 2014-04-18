@@ -3,4 +3,27 @@
 <h2>New user </h2>
 <%= render :partial => 'form' %>
 
+<h3>Files:</h3>
+<div id="files"></div>
+
+<script type="text/javascript" charset="utf-8">
+  $(function () {
+      // Initialize the jQuery File Upload widget:
+ $('#fileupload').fileupload({
+        url: '/users',
+        dataType: 'json',
+        done: function (e, data) {
+        	alert('done');
+            $.each(data.result.files, function (index, file) {
+                $('<p/>').text(file.name).appendTo('#files');
+            });
+        },
+        progressall: function (e, data) {
+            var progress = parseInt(data.loaded / data.total * 100, 10);
+	     	alert(progress + '%');
+        }
+    }).prop('disabled', !$.support.fileInput)
+        .parent().addClass($.support.fileInput ? undefined : 'disabled');
+  });
+</script>
 <p><%= link_to "Back to List", users_path %></p>

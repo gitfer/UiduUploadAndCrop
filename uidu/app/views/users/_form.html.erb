@@ -1,4 +1,4 @@
-<%= form_for @user, :html => { :multipart => true } do |f| %>
+<%= form_for @user, :html => { :multipart => true, :id => "fileupload" } do |f| %>
    <%= errors_for(@user, "Opps, impossibile creare un nuovo utente").html_safe %>
   <p>
     <%= f.label :name %><br />
@@ -9,4 +9,12 @@
     <%= f.file_field :avatar %>
   </p>
   <p><%= f.submit "Submit" %></p>
+      <div class="span5">
+        <!-- The global progress bar -->
+        <div class="progress progress-success progress-striped active fade">
+          <div class="bar" style="width:0%;"></div>
+        </div>
+      </div>
+    <!-- The loading indicator is shown during image processing -->
+    <div class="fileupload-loading"></div>
 <% end %>
