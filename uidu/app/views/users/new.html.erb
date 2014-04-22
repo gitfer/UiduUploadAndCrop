@@ -6,24 +6,80 @@
 <h3>Files:</h3>
 <div id="files"></div>
 
+<div id="cropContainer">
+</div>
+
+
 <script type="text/javascript" charset="utf-8">
+
+var previewWidth = 300, previewHeight = 300;
+function update_crop(coords, width, height, large_width, large_height) {
+    var rx = previewWidth/coords.w;
+    var ry = previewHeight/coords.h;
+    $('#preview').css({
+        width: Math.round(rx * large_width) + 'px',
+        height: Math.round(ry * large_height) + 'px',
+        marginLeft: '-' + Math.round(rx * coords.x) + 'px',
+        marginTop: '-' + Math.round(ry * coords.y) + 'px'
+    });
+  var ratio = width / height; 
+  $("#crop_x").val(Math.round(coords.x * ratio));
+  $("#crop_y").val(Math.round(coords.y * ratio));
+  $("#crop_w").val(Math.round(coords.w * ratio));
+  $("#crop_h").val(Math.round(coords.h * ratio));
+}
+
   $(function () {
-      // Initialize the jQuery File Upload widget:
- $('#fileupload').fileupload({
-        url: '/users',
-        dataType: 'json',
-        done: function (e, data) {
-        	alert('done');
-            $.each(data.result.files, function (index, file) {
-                $('<p/>').text(file.name).appendTo('#files');
-            });
-        },
-        progressall: function (e, data) {
-            var progress = parseInt(data.loaded / data.total * 100, 10);
-	     	alert(progress + '%');
-        }
-    }).prop('disabled', !$.support.fileInput)
-        .parent().addClass($.support.fileInput ? undefined : 'disabled');
+      var selectionWidth = 40, selectionHeight = 40;
+      var containerId = "cropContainer";
+      /* private vars */
+      var idCropBox = "cropbox";
+      var idPreview = "preview";
+       $('#fileupload').fileupload({
+              url: '/users',
+              dataType: 'json',
+              done: function (e, data) {
+                var $cropbox = jQuery('<div><img src="" alt="Immagine da ridimensionare" id="' + idCropBox + '"></div>');
+                var $preview = jQuery('<h4>Anteprima immagine</h4><div><img src="" alt="Immagine di anteprima" id="' + idPreview + '"></div>');
+                $preview.filter('div:first').css({
+                  width: previewWidth + 'px',
+                  height: previewHeight + 'px',
+                  overflow: 'hidden'
+                })
+                jQuery("#"+containerId).append($cropbox)
+                jQuery("#"+containerId).append($preview);
+
+                  jQuery.each(data.result.files, function (index, file) {
+                      jQuery('#' + idPreview +', #' + idCropBox + '').attr("src", file.url_large);
+                      jQuery('<p/>').text(file.url).appendTo('#files');
+                      var original_width = file.original_width;
+                      var original_height = file.original_height;
+                      var large_width = file.large_width;
+                      var large_height = file.large_height;
+
+                      jQuery('#'+idCropBox).Jcrop({
+                        onChange: function(coords) {
+                            update_crop(coords, original_width, original_height, large_width, large_height);
+                          },
+                        onSelect: function(coords) {
+                            update_crop(coords, original_width, original_height, large_width, large_height);
+                          },
+                        setSelect: [large_width/2-selectionWidth/2, large_width/2-selectionWidth/2, selectionWidth, selectionHeight],
+                        aspectRatio: 1,
+                        allowResize: false,
+                        minSize: [ selectionWidth, selectionHeight ],
+                        maxSize: [ selectionWidth, selectionHeight ]
+                      });
+
+                  });
+              },
+              progressall: function (e, data) {
+                  var progress = parseInt(data.loaded / data.total * 100, 10);
+      	     	    console.log(progress + '%');
+              }
+          }).prop('disabled', !$.support.fileInput)
+              .parent().addClass($.support.fileInput ? undefined : 'disabled');
+
   });
 </script>
 <p><%= link_to "Back to List", users_path %></p>
