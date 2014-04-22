@@ -45,7 +45,8 @@ function update_crop(coords, width, height, large_width, large_height) {
                   width: previewWidth + 'px',
                   height: previewHeight + 'px',
                   overflow: 'hidden'
-                })
+                });
+                jQuery("#"+containerId).html('');
                 jQuery("#"+containerId).append($cropbox)
                 jQuery("#"+containerId).append($preview);
 
@@ -58,6 +59,7 @@ function update_crop(coords, width, height, large_width, large_height) {
                       var large_height = file.large_height;
 
                       jQuery('#'+idCropBox).Jcrop({
+                        bgColor: 'orange',
                         onChange: function(coords) {
                             update_crop(coords, original_width, original_height, large_width, large_height);
                           },
