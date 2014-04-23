@@ -10,3 +10,10 @@
     @include radius(5px);
   }
 }
+
+/****** Inizio hack fondamentale per JCrop con ZurbFoundation *******/
+#cropContainer img { 
+max-width: inherit !important;
+}
+/****** Fine hack fondamentale per JCrop con ZurbFoundation *******/
+
