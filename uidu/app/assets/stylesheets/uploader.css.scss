@@ -1,0 +1,12 @@
+@import "foundation/variables";
+@import "foundation/components/global";
+@import "foundation/components/progress-bars";
+
+.uidu-progress-bar {
+  @include progress-container;
+  @include radius(6px);
+  & > span {
+    @include progress-meter(orange);
+    @include radius(5px);
+  }
+}
