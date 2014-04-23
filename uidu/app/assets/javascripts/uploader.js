@@ -58,7 +58,13 @@ function update_crop(coords, width, height, large_width, large_height) {
               add: function  (e, data) {
                 $('#crop').addClass('hide');
                 showFileName(data.files[0].name);
-                data.context = $('<button/>').text('Carica immagine')
+
+                $progressBar.insertBefore($container);
+                
+                if($('#loadingImageButton').length>0)
+                  $('#loadingImageButton').remove();
+
+                data.context = $('<button id="loadingImageButton"/>').text('Carica immagine')
                 .insertBefore($container)
                 .click(function () {
                     $(".loadingStatus").remove();
@@ -67,7 +73,6 @@ function update_crop(coords, width, height, large_width, large_height) {
                 });
 
                 $container.html('');
-                $container.append($progressBar);
               },
               done: function (e, data) { 
                 data.context.text('Caricamento terminato.');
@@ -115,7 +120,7 @@ function update_crop(coords, width, height, large_width, large_height) {
               },
               progressall: function (e, data) {
                   var progress = parseInt(data.loaded / data.total * 100, 10);
-      	     	    $progressBar.find("span.meter").css("width", progress+"%");
+      	     	    $progressBar.find("span.meter").css({width: progress+"%", textAlign: "center" }).text("Caricamento: " + progress+"%");
               }
           });
 
