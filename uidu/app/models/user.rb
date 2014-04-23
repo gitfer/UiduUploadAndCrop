@@ -28,6 +28,7 @@ class User < ActiveRecord::Base
       "original_height" =>  avatar_geometry(:original).height,
       "large_width" =>  avatar_geometry(:large).width,
       "large_height" =>  avatar_geometry(:large).height,
+      "id" =>  self.id,
       "delete_url" => user_path(self),
       "delete_type" => "DELETE"
     }

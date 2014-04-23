@@ -1,12 +1,43 @@
 <%= form_for @user, :html => { :multipart => true, :id => "fileupload" } do |f| %>
    <%= errors_for(@user, "Opps, impossibile creare un nuovo utente").html_safe %>
+   <p>
+          <input type="hidden" id="userId" name="id">
+   </p>
   <p>
     <%= f.label :name %><br />
     <%= f.text_field :name %>
   </p>
   <p>
-    <%= f.label :avatar %><br />
-    <%= f.file_field :avatar %>
+          <div class="small columns">
+            <fieldset>
+              <legend>Carica una immagine</legend>
+
+              <label></label><br />
+              <input type="file" id="fileUploader" name="">
+
+              <%= f.button "Ritaglia", :id =>"crop", :type => "button", :class => "hide" %>
+
+              <input type="hidden" id="crop_x" name="crop_x">
+              <input type="hidden" id="crop_y" name="crop_y">
+              <input type="hidden" id="crop_w" name="crop_w">
+              <input type="hidden" id="crop_h" name="crop_h">
+              <div id="cropContainer">
+              </div>
+            </fieldset>
+          </div>
+        <div class="small columns">
+          <div id="uploaderError" class="small columns">
+            <small></small>
+          </div>
+        </div>
+    <div class="small columns">
+        <%= f.submit "Salva" %>
+    </div>
   </p>
-  <p><%= f.submit "Submit" %></p>
+  <%= javascript_include_tag "uploader" %>
+  <script type="text/javascript" >
+    
+  </script>
+
+
 <% end %>

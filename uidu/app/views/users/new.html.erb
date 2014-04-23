@@ -3,11 +3,4 @@
 <h2>New user </h2>
 <%= render :partial => 'form' %>
 
-<h3>Files:</h3>
-
-<div id="files"></div>
-<div id="cropContainer">
-</div>
-
-    <%= javascript_include_tag "uploader" %>
-<p><%= link_to "Back to List", users_path %></p>
+<div><%= link_to "Back to List", users_path %></div>
