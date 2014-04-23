@@ -46,17 +46,23 @@ function update_crop(coords, width, height, large_width, large_height) {
         "name": config.model + "[avatar]"
         });
 
+       function showFileName (fileName) {
+          $('.fileNameShowed').remove();
+          $('<p class="fileNameShowed"/>').text(fileName)
+          .insertBefore($container);
+       }
+
        $form.fileupload({
               url: config.uploadUrl,
               dataType: 'json',
               add: function  (e, data) {
                 $('#crop').addClass('hide');
-                $('<p/>').text(data.files[0].name)
-                .insertBefore($container);
+                showFileName(data.files[0].name);
                 data.context = $('<button/>').text('Carica immagine')
                 .insertBefore($container)
                 .click(function () {
-                    data.context = $('<p/>').text('Caricamento in corso. Attendere prego...').replaceAll($(this));
+                    $(".loadingStatus").remove();
+                    data.context = $('<p class="loadingStatus"/>').text('Caricamento in corso. Attendere prego...').replaceAll($(this));
                     data.submit();
                 });
 
