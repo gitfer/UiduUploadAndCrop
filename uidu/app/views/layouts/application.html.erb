@@ -17,6 +17,7 @@
   	<title><%= content_for?(:title) ? yield(:title) : "Uidu prova" %></title>
 
   	<%= stylesheet_link_tag    "application" %>
+    <%= javascript_include_tag "application" %>
   	<%= javascript_include_tag "vendor/custom.modernizr" %>
     <%= csrf_meta_tags %>
   <%= yield(:head) %>
@@ -35,6 +36,5 @@
     <%= yield %>
 
     
-    <%= javascript_include_tag "application" %>
   </body>
 </html>
