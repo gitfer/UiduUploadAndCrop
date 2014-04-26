@@ -33,8 +33,28 @@
         <%= f.submit "Salva" %>
     </div>
   </p>
-  <%= javascript_include_tag "uploader" %>
+  <%= javascript_include_tag "uiduUploader" %>
   <script type="text/javascript" >
+
+$(function () {
+    $('#fileupload').uiduUploader();
+
+    $(document.body).on('crop', function (evt, data) { 
+        console.log("Crop subscriber", evt, data);
+      // var valuesToSubmit =  $(this).closest('form').serialize();
+      // console.log(valuesToSubmit);
+      // $.ajax({
+      //     url: "/updateAvatar", //sumbits it to the given url of the form
+      //     data: valuesToSubmit,
+      //     method: "PUT",
+      //     dataType: "JSON" // you want a difference between normal and ajax-calls, and json is standard
+      // }).success(function(json){
+      //     //act on result.
+      // }).error(function () {
+      // });
+    });
+
+});
     
   </script>
 
