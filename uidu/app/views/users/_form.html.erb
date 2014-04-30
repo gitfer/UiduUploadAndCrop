@@ -18,10 +18,10 @@
 
               <input id="cropButton" class="hide button" type="button" value="Ritaglia">
 
-              <input type="hidden" id="crop_x" name="crop_x">
-              <input type="hidden" id="crop_y" name="crop_y">
-              <input type="hidden" id="crop_w" name="crop_w">
-              <input type="hidden" id="crop_h" name="crop_h">
+              <input type="hidden" id="crop_x" class="cropData" name="crop_x">
+              <input type="hidden" id="crop_y" class="cropData" name="crop_y">
+              <input type="hidden" id="crop_w" class="cropData" name="crop_w">
+              <input type="hidden" id="crop_h" class="cropData" name="crop_h">
               <div id="cropContainer">
               </div>
             </fieldset>
@@ -45,23 +45,38 @@ $(function () {
           $fileupload.uiduUploader({enableCrop: $(this).val() === "true" });
     });
 
+    $(document.body).on('fileid', function (evt, data) { 
+        $('#userId').val(data.fileid);
+    });
+
     $(document.body).on('upload', function (evt, data) { 
         console.log("Upload subscriber", evt, data);
     });
 
     $(document.body).on('crop', function (evt, data) { 
         console.log("Crop subscriber", evt, data);
-      // var valuesToSubmit =  $(this).closest('form').serialize();
-      // console.log(valuesToSubmit);
-      // $.ajax({
-      //     url: "/updateAvatar", //sumbits it to the given url of the form
-      //     data: valuesToSubmit,
-      //     method: "PUT",
-      //     dataType: "JSON" // you want a difference between normal and ajax-calls, and json is standard
-      // }).success(function(json){
-      //     //act on result.
-      // }).error(function () {
-      // });
+      var valuesToSubmit =  $('form').serialize();
+      console.log("valuesToSubmit", valuesToSubmit);
+      $.ajax({
+          url: "/users/"+$('#userId').val(), //sumbits it to the given url of the form
+          data: JSON.stringify({ 
+            user: 
+            { avatar: 
+                {
+                  crop_x: $('#crop_x').val(),
+                  crop_y: $('#crop_y').val(),
+                  crop_w: $('#crop_w').val(),
+                  crop_h: $('#crop_h').val() 
+                } 
+            } 
+          }),
+          method: "PUT",
+          contentType: 'application/json', // format of request payload
+          dataType: 'json'
+      }).success(function(json){
+          //act on result.
+      }).error(function () {
+      });
     });
 
 });

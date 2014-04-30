@@ -19,12 +19,13 @@ class UsersController < ApplicationController
 
   def update
     @user = User.find(params[:id])
+    p "update"
     if @user.update_attributes(params[:user])
       flash[:notice] = "Successfully updated user."
       if params[:user][:avatar].blank?
         redirect_to @user
       else
-        render :action => 'crop'
+        render :action => 'cropping'
       end
     else
       render :action => 'edit'

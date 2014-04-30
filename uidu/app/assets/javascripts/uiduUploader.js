@@ -92,6 +92,11 @@
         'id': self.options.model + '_avatar',
         'name': self.options.model + '[avatar]'
       });
+      $('.cropData').each(function(key, value) {
+        $(this).attr({
+          'name': self.options.model + '[' + $(this).attr('name') + ']'
+        });
+      })
       $form.fileupload({
         url: self.options.uploadUrl,
         dataType: 'json',
@@ -150,6 +155,10 @@
                 width: self.options.previewWidth + 'px',
                 height: self.options.previewWidth + 'px',
                 overflow: 'hidden'
+              });
+
+              self._trigger('fileid', 'fileid', {
+                fileid: file.id
               });
 
               jQuery('#' + idCropBox).Jcrop({
