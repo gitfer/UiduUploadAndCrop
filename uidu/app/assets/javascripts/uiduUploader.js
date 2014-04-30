@@ -115,7 +115,7 @@
             $('#loadingImageButton').remove();
           }
 
-          data.context = $('<button id="loadingImageButton"/>').text('Carica immagine')
+          data.context = $('<input type="button" class="button" id="loadingImageButton"/>').attr('value', 'Carica immagine')
             .insertBefore($container)
             .click(function(e) {
               e.preventDefault();
