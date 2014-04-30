@@ -24,7 +24,7 @@ casper.test.begin('Uploader deve essere presente nella pagina', function suite(t
 	});
 
 	casper.then(function() {
-		test.assertTextExists('Carica una immagine', 'Il body contiene "Carica una immagine"');
+		test.assertTextExists('Carica una immagine', 'Legenda "Carica una immagine" visibile');
 	});
 
 	casper.run(function() {
