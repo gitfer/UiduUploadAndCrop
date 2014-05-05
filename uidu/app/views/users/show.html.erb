@@ -5,7 +5,14 @@
   <%=h @user.name %>
 </p>
 
-<p><%= image_tag @user.avatar.url(:small) %></p>
+<h3>Originale con larghezza fissa e aspect ratio mantenuto</h3>
+<p><%= image_tag @user.avatar.url() %></p>
+
+<h3>Large</h3>
+<p><%= image_tag @user.avatar.url(:large) %></p>
+
+<h3>Thumb</h3>
+<p><%= image_tag @user.avatar.url(:thumb) %></p>
 
 <p>
   <%= link_to "Edit", edit_user_path(@user) %> |

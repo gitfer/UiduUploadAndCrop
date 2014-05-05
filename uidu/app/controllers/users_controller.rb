@@ -2,13 +2,13 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(params[:user])
+
     respond_to do |format|
       if @user.save
         flash[:notice] = "Successfully created user."
         if params[:user][:avatar].blank?
           redirect_to @user
         else
-          # render :action => 'crop'
           format.json { render json: {files: [@user.to_jq_upload]}, status: :created, location: @user }
         end
       else
