@@ -11,6 +11,8 @@ class User < ActiveRecord::Base
   after_update :reprocess_avatar, :if => :cropping?
 
   def cropping?
+    p "cropping"
+    p !crop_x.blank? && !crop_y.blank? && !crop_w.blank? && !crop_h.blank?
     !crop_x.blank? && !crop_y.blank? && !crop_w.blank? && !crop_h.blank?
   end
 
@@ -44,7 +46,7 @@ class User < ActiveRecord::Base
   end
 
   def reprocess_avatar
-    avatar.reprocess!
+    avatar.recreate_versions!
   end
 
 end

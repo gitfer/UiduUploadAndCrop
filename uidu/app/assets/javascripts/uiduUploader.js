@@ -34,12 +34,11 @@
       imageMaxWidth: 800
     },
 
-    _updateCrop: function(coords, ratio, largeWidth, largeHeight) {
+    _updateCrop: function(coords, ratio) {
       var rx = this.options.previewWidth / coords.w;
       var ry = this.options.previewHeight / coords.h;
       $('#' + idPreview).css({
-        width: Math.round(rx * largeWidth) + 'px',
-        // height: Math.round(ry * largeHeight) + 'px',
+        width: Math.round(rx * this.options.croppingImageWidth) + 'px',
         marginLeft: '-' + Math.round(rx * coords.x) + 'px',
         marginTop: '-' + Math.round(ry * coords.y) + 'px'
       });
@@ -58,7 +57,13 @@
     },
 
     _showCropBox: function(showCropBox) {
-      showCropBox === true ? $('#' + idCropBox).removeClass('hide') && $('#cropButton').removeClass('hide') : $('#' + idCropBox).addClass('hide') && $('#cropButton').addClass('hide');
+      if (showCropBox === true) {
+        $('#' + idCropBox).removeClass('hide');
+        $('#cropButton').removeClass('hide');
+      } else {
+        $('#' + idCropBox).addClass('hide');
+        $('#cropButton').addClass('hide');
+      }
     },
 
     _createCropBox: function() {
@@ -69,6 +74,39 @@
     _createPreview: function() {
       var $preview = jQuery('<h4>Anteprima immagine</h4><div><img src="" alt="Immagine di anteprima" id="' + idPreview + '"></div>');
       $container.append($preview);
+    },
+
+    _crop: function(event) {
+      var formData = this.element.serialize();
+      this._trigger('crop', event, {
+        key: formData
+      });
+    },
+
+    _upload: function() {
+      var formData = this.element.serialize();
+      this._trigger('upload', 'upload', {
+        key: formData
+      });
+    },
+
+    // Respond to any changes the user makes to the 
+    // option method
+    _setOption: function(key, value) {
+      switch (key) {
+        case 'someValue':
+          //this.options.someValue = doSomethingWith( value );
+          break;
+        default:
+          this.options[key] = value;
+          break;
+      }
+
+      // For UI 1.8, _setOption must be manually invoked 
+      // from the base widget
+      $.Widget.prototype._setOption.apply(this, arguments);
+      // For UI 1.9 the _super method can be used instead
+      // this._super( "_setOption", key, value );
     },
 
     //Setup widget (eg. element creation, apply theming
@@ -92,11 +130,11 @@
         'id': self.options.model + '_avatar',
         'name': self.options.model + '[avatar]'
       });
-      $('.cropData').each(function(key, value) {
+      $('.cropData').each(function() {
         $(this).attr({
           'name': self.options.model + '[' + $(this).attr('name') + ']'
         });
-      })
+      });
       $form.fileupload({
         url: self.options.uploadUrl,
         dataType: 'json',
@@ -133,8 +171,7 @@
           self._createCropBox();
           self._createPreview();
           jQuery.each(data.result.files, function(index, file) {
-            // NOTE: save id???
-            // jQuery('#userId').val(file.id);
+            // preview e crop usano la immagine large
             jQuery('#' + idPreview + ', #' + idCropBox + '').attr('src', file.url_large);
 
             var originalWidth = file.original_width;
@@ -164,10 +201,10 @@
               jQuery('#' + idCropBox).Jcrop({
                 bgColor: 'orange',
                 onChange: function(coords) {
-                  self._updateCrop(coords, ratio, self.options.croppingImageWidth, self.options.croppingImageHeight);
+                  self._updateCrop(coords, ratio);
                 },
                 onSelect: function(coords) {
-                  self._updateCrop(coords, ratio, self.options.croppingImageWidth, self.options.croppingImageHeight);
+                  self._updateCrop(coords, ratio);
                 },
                 setSelect: [largeWidth / 2 - self.options.selectionWidth / 2, largeHeight / 2 - self.options.selectionHeight / 2, self.options.selectionWidth, self.options.selectionHeight],
                 aspectRatio: 1,
@@ -208,39 +245,6 @@
       // For UI 1.9, define _destroy instead and don't 
       // worry about 
       // calling the base widget
-    },
-
-    _crop: function(event) {
-      var formData = this.element.serialize();
-      this._trigger('crop', event, {
-        key: formData
-      });
-    },
-
-    _upload: function() {
-      var formData = this.element.serialize();
-      this._trigger('upload', 'upload', {
-        key: formData
-      });
-    },
-
-    // Respond to any changes the user makes to the 
-    // option method
-    _setOption: function(key, value) {
-      switch (key) {
-        case 'someValue':
-          //this.options.someValue = doSomethingWith( value );
-          break;
-        default:
-          this.options[key] = value;
-          break;
-      }
-
-      // For UI 1.8, _setOption must be manually invoked 
-      // from the base widget
-      $.Widget.prototype._setOption.apply(this, arguments);
-      // For UI 1.9 the _super method can be used instead
-      // this._super( "_setOption", key, value );
     }
   });
 

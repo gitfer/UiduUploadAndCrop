@@ -55,28 +55,26 @@ $(function () {
 
     $(document.body).on('crop', function (evt, data) { 
         console.log("Crop subscriber", evt, data);
-      var valuesToSubmit =  $('form').serialize();
-      console.log("valuesToSubmit", valuesToSubmit);
-      $.ajax({
-          url: "/users/"+$('#userId').val(), //sumbits it to the given url of the form
-          data: JSON.stringify({ 
+        $.ajax({
+        type: "PUT",
+        dataType: "script",
+        url: "/users/"+$('#userId').val(),
+        data:
+        {
             user: 
-            { avatar: 
-                {
+            { 
                   crop_x: $('#crop_x').val(),
                   crop_y: $('#crop_y').val(),
                   crop_w: $('#crop_w').val(),
                   crop_h: $('#crop_h').val() 
-                } 
-            } 
-          }),
-          method: "PUT",
-          contentType: 'application/json', // format of request payload
-          dataType: 'json'
-      }).success(function(json){
-          //act on result.
-      }).error(function () {
-      });
+            },
+            _method: 'put'
+        }
+        })
+        .done(function( msg )
+        {
+            alert( "Data Saved: " + msg );
+        });
     });
 
 });
