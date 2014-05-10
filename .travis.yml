@@ -13,7 +13,7 @@ before_script:
         - cd ./uidu
         - bundle install
         - RAILS_ENV=test bundle exec rake --trace db:migrate test
-        - ./script/rails server
-        - sleep 10
+        - ./script/rails server &
+        - sleep 5
 
 script: ./runTests.sh
