@@ -54,12 +54,11 @@ $(function () {
     });
 
     $(document.body).on('crop', function (evt, data) { 
-        console.log("Crop subscriber", evt, data);
         $.ajax({
         type: "PUT",
-        dataType: "script",
+        contentType: "application/json",
         url: "/users/"+$('#userId').val(),
-        data:
+        data: JSON.stringify(
         {
             user: 
             { 
@@ -69,11 +68,14 @@ $(function () {
                   crop_h: $('#crop_h').val() 
             },
             _method: 'put'
-        }
+        })
         })
         .done(function( msg )
         {
-            alert( "Data Saved: " + msg );
+          $('<p style="color: green">Crop avvenuto correttamente</p>').insertAfter('#cropButton');
+          var detailUrl = "<%= "#{request.original_url}" %>";
+          $('<p><a href="' + detailUrl.replace("new", msg.location.id) + '">Dettaglio</a></p>').insertAfter('#cropButton');
+            
         });
     });
 

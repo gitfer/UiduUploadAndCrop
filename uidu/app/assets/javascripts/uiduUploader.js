@@ -4,19 +4,12 @@
 (function($, window, document, undefined) {
 
   var $form, $progressBar, $container;
-  /* private vars */
-  var idCropBox = 'cropbox';
-  var idPreview = 'preview';
 
-  // define your widget under a namespace of your choice
-  //  with additional parameters e.g. 
-  // $.widget( "namespace.widgetname", (optional) - an 
-  // existing widget prototype to inherit from, an object 
-  // literal to become the widget's prototype ); 
+  var idCrop = 'cropbox';
+  var idPreview = 'preview';
 
   $.widget('uidu.uiduUploader', {
 
-    //Options to be used as defaults
     options: {
       selectionWidth: 40,
       selectionHeight: 40,
@@ -24,17 +17,15 @@
       previewHeight: 200,
       enableCrop: false,
       croppingImageWidth: 100,
-      croppingImageHeight: 100,
       containerId: 'cropContainer',
       allowedMimeTypes: ['image/png', 'image/gif', 'image/tiff', 'image/bmp', 'image/x-bmp',
         'image/jpeg', 'image/pjpeg'
       ],
       model: 'user',
-      uploadUrl: '/users',
-      imageMaxWidth: 800
+      uploadUrl: '/users'
     },
 
-    _updateCrop: function(coords, ratio) {
+    _updateCrop: function(coords, ratio, originalWidth) {
       var rx = this.options.previewWidth / coords.w;
       var ry = this.options.previewHeight / coords.h;
       $('#' + idPreview).css({
@@ -46,7 +37,7 @@
       $('#crop_y').val(Math.round(coords.y * ratio));
       $('#crop_w').val(Math.round(coords.w * ratio));
       $('#crop_h').val(Math.round(coords.h * ratio));
-    },
+     },
 
     _showFileName: function(showFileName, fileName) {
       $('.fileNameShowed').remove();
@@ -58,16 +49,16 @@
 
     _showCropBox: function(showCropBox) {
       if (showCropBox === true) {
-        $('#' + idCropBox).removeClass('hide');
+        $('#' + idCrop).removeClass('hide');
         $('#cropButton').removeClass('hide');
       } else {
-        $('#' + idCropBox).addClass('hide');
+        $('#' + idCrop).addClass('hide');
         $('#cropButton').addClass('hide');
       }
     },
 
     _createCropBox: function() {
-      var $cropbox = jQuery('<div><img src="" alt="Immagine da ridimensionare" id="' + idCropBox + '" ></div>');
+      var $cropbox = jQuery('<div><img src="" alt="Immagine da ridimensionare" id="' + idCrop + '" ></div>');
       $container.append($cropbox);
     },
 
@@ -90,8 +81,6 @@
       });
     },
 
-    // Respond to any changes the user makes to the 
-    // option method
     _setOption: function(key, value) {
       switch (key) {
         case 'someValue':
@@ -109,16 +98,8 @@
       // this._super( "_setOption", key, value );
     },
 
-    //Setup widget (eg. element creation, apply theming
-    // , bind events etc.)
     _create: function() {
       var self = this;
-      // _create will automatically run the first time 
-      // this widget is called. Put the initial widget 
-      // setup code here, then you can access the element 
-      // on which the widget was called via this.element. 
-      // The options defined above can be accessed 
-      // via this.options this.element.addStuff();
       $form = self.element;
       $progressBar = jQuery('<div class="uidu-progress-bar"><span class="meter" style="width: 0%"></span></div>');
       $container = jQuery('#' + self.options.containerId);
@@ -172,15 +153,16 @@
           self._createPreview();
           jQuery.each(data.result.files, function(index, file) {
             // preview e crop usano la immagine large
-            jQuery('#' + idPreview + ', #' + idCropBox + '').attr('src', file.url_large);
+            jQuery('#' + idPreview + ', #' + idCrop).attr('src', file.url_large);
 
             var originalWidth = file.original_width;
             var originalHeight = file.original_height;
             var ratio = originalWidth / originalHeight;
             var largeWidth = file.large_width;
             var largeHeight = file.large_height;
+            var ratioForCropping = file.original_width / self.options.croppingImageWidth;
 
-            $('#' + idCropBox).css({
+            $('#' + idCrop).css({
               width: self.options.croppingImageWidth + 'px',
               height: self.options.croppingImageWidth / ratio + 'px'
             });
@@ -198,13 +180,13 @@
                 fileid: file.id
               });
 
-              jQuery('#' + idCropBox).Jcrop({
+              jQuery('#' + idCrop).Jcrop({
                 bgColor: 'orange',
                 onChange: function(coords) {
-                  self._updateCrop(coords, ratio);
+                  self._updateCrop(coords, ratioForCropping);
                 },
                 onSelect: function(coords) {
-                  self._updateCrop(coords, ratio);
+                  self._updateCrop(coords, ratioForCropping);
                 },
                 setSelect: [largeWidth / 2 - self.options.selectionWidth / 2, largeHeight / 2 - self.options.selectionHeight / 2, self.options.selectionWidth, self.options.selectionHeight],
                 aspectRatio: 1,
@@ -219,6 +201,7 @@
               self._upload();
             }
           });
+   
         },
         progressall: function(e, data) {
           var progress = parseInt(data.loaded / data.total * 100, 10);
