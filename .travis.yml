@@ -14,5 +14,6 @@ before_script:
         - bundle install
         - RAILS_ENV=test bundle exec rake --trace db:migrate test
         - ./script/rails server &
+        - sleep 6
 
 script: ./runTests.sh
