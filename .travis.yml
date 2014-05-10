@@ -11,5 +11,6 @@ install:
 before_script:
         - npm install -g casperjs
         - phantomjs --version; casperjs --version
+        cd ./uidu
 
-script: ./uidu/runTests.sh
+script: ./runTests.sh
