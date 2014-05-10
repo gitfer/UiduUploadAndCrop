@@ -28,6 +28,7 @@ class User < ActiveRecord::Base
       "name" => avatar.filename,
       "size" => avatar.size,
       "url" => avatar.url,
+      "url_original" => avatar.url(:original),
       "url_large" => avatar.url(:large),
       "original_width" =>  avatar_geometry()[:width],
       "original_height" =>  avatar_geometry()[:height],

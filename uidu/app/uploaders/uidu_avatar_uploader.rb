@@ -33,16 +33,14 @@ class UiduAvatarUploader < CarrierWave::Uploader::Base
   def crop
     if model.crop_x.present?
       manipulate! do |img|
-        img_copy = img.clone
         x = model.crop_x
         y = model.crop_y
         w = model.crop_w
         h = model.crop_h
-        p img
         size = w << 'x' << h
         offset = '+' << x << '+' << y
-        p #{size}#{offset}
-        img_copy.crop("#{size}#{offset}")
+        img.crop("#{size}#{offset}")
+        p img
         img
       end
     end
@@ -53,18 +51,17 @@ class UiduAvatarUploader < CarrierWave::Uploader::Base
   # Create different versions of your uploaded files:
   version :thumb do
     p "thumb"
-    process :crop
     process :resize_to_fit => [50, nil]
   end
 
   version :large do
     p "large"
-    process :crop
-    process :resize_to_fit => [800, nil]
+    process :resize_to_fit => [500, nil]
   end
 
   version :original do
     p "crop"
+    process :crop
     process :resize_to_fit => [800, nil]
   end
 

@@ -18,19 +18,22 @@ class UsersController < ApplicationController
   end
 
   def update
-    @user = User.find(params[:id])
     p "update"
+    # raise params.inspect
+    @user = User.find(params[:id])
     p params[:user]
-    if @user.update_attributes(params[:user])
-      flash[:notice] = "Successfully updated user."
-      if params[:user][:avatar].blank?
-        redirect_to @user
+    respond_to do |format|
+      if @user.update_attributes(params[:user])
+        flash[:notice] = "Successfully updated user."
+
+        format.json { render json: { status: :modified, location: @user } }
       else
-        render :action => 'show'
+        p "edit update"
+        #render :action => 'edit'
+        format.json { render json: { status: :modified, location: @user } }
       end
-    else
-      render :action => 'edit'
     end
+
   end
 
   def index
