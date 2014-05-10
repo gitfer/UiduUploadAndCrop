@@ -12,6 +12,7 @@ before_script:
         - npm install -g casperjs
         - phantomjs --version; casperjs --version
         - cd ./uidu
+        - bundle install
         -  ./script/rails server
 
 script: ./runTests.sh
