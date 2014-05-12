@@ -8,29 +8,9 @@
     <%= f.text_field :name %>
   </p>
   <p>
-          <div class="small columns">
-            <fieldset>
-              <legend id="legenda">Carica una immagine</legend>
-
-              <input type="radio" class="abilitaCrop" name="abilitaCrop" value="true"  checked="checked">Crop</input>
-              <input type="radio" class="abilitaCrop" name="abilitaCrop" value="false">Upload</input>
-              <input type="file" id="fileUploader" name="fileUploader">
-              
-              <input id="cropButton" class="hide button" type="button" value="Ritaglia">
-
-              <input type="hidden" id="crop_x" class="cropData" name="crop_x">
-              <input type="hidden" id="crop_y" class="cropData" name="crop_y">
-              <input type="hidden" id="crop_w" class="cropData" name="crop_w">
-              <input type="hidden" id="crop_h" class="cropData" name="crop_h">
-              <div id="cropContainer">
-              </div>
-            </fieldset>
-          </div>
-        <div class="small columns">
-          <div id="uploaderError" class="small columns">
-            <small></small>
-          </div>
-        </div>
+      <div class="uiduUploaderContainer"></div>
+  </p>
+  <p>
     <div class="small columns">
         <%= f.submit "Salva" %>
     </div>
@@ -40,11 +20,7 @@
 
 $(function () {
     var $fileupload = $('#fileupload').uiduUploader({enableCrop: true});
-
-    $('.abilitaCrop').change(function (evt, data) {
-          $fileupload.uiduUploader({enableCrop: $(this).val() === "true" });
-    });
-
+    
     $(document.body).on('fileid', function (evt, data) { 
         $('#userId').val(data.fileid);
     });
@@ -53,7 +29,8 @@ $(function () {
         console.log("Upload subscriber", evt, data);
     });
 
-    $(document.body).on('crop', function (evt, data) { 
+    $(document.body).on('crop', function (evt, data) {
+    $('<p id="cropStatusMessage" style="color: blue">Ritaglio immagine in corso. Attendere prego...</p>').insertAfter('#cropButton'); 
         $.ajax({
         type: "PUT",
         contentType: "application/json",
@@ -69,16 +46,15 @@ $(function () {
             },
             _method: 'put'
         })
-        })
+        })          
         .done(function( msg )
         {
-          $('<p style="color: green">Crop avvenuto correttamente</p>').insertAfter('#cropButton');
+          $('#cropStatusMessage').css('color', 'green').text('Immagine ritagliata con successo').insertAfter('#cropButton');
           var detailUrl = "<%= "#{request.original_url}" %>";
           $('<p><a href="' + detailUrl.replace("new", msg.location.id) + '">Dettaglio</a></p>').insertAfter('#cropButton');
             
         });
     });
-
 });
     
   </script>
