@@ -54,12 +54,12 @@ casper.test.begin('Crop', function suite(test) {
 		});
 
 		this.fill('form', uploadImage(), false);
-		test.assertEquals(this.visible('#loadingImageButton'), true, 'Id del bottone di upload presente');
+		test.assertVisible('#loadingImageButton', 'Id del bottone di upload presente');
 
 		this.click('#loadingImageButton');
 		casper.waitForResource(testImage, function() {
-			test.assertEquals(this.exists('#cropButton'), true, 'Id del bottone di crop presente');
-			test.assertExists('#cropButton[value="Ritaglia"]', 'Il testo del bottone di crop è "Ritaglia"');
+			test.assertVisible('#cropButton', 'Id del bottone di crop presente');
+			test.assertSelectorHasText('#cropButton > span', 'Ritaglia', 'Il testo del bottone di crop è "Ritaglia"');
 
 		});
 	});
@@ -69,6 +69,9 @@ casper.test.begin('Crop', function suite(test) {
 });
 
 casper.test.begin('Upload senza crop', function suite(test) {
+	casper.start(BASE_URL, function() {
+	});
+
 	casper.then(function() {
 		casper.evaluate(function() {
 			$('form').uiduUploader({
@@ -77,10 +80,11 @@ casper.test.begin('Upload senza crop', function suite(test) {
 		});
 
 		this.fill('form', uploadImage(), false);
-		test.assertEquals(this.visible('#loadingImageButton'), true, 'Id del bottone di upload presente');
+		test.assertEquals(this.exists('#loadingImageButton'), true, 'Id del bottone di upload presente');
 
 		this.click('#loadingImageButton');
 		casper.waitForResource(testImage, function() {
+			debug();
 			test.assertEquals(this.exists('#cropButton'), true, 'Id del bottone di crop è presente');
 			test.assertEquals(this.visible('#cropButton'), false, 'Id del bottone di crop è presente ma non visibile');
 		});
