@@ -4,22 +4,22 @@
 @import "foundation/components/progress-bars";
 
 /****** Inizio hack fondamentale per JCrop con ZurbFoundation *******/
-#cropContainer img { 
-max-width: inherit !important;
+#cropContainer img {
+  max-width: inherit !important;
 }
 /****** Fine hack fondamentale per JCrop con ZurbFoundation *******/
 
-$color: orange;
+$color: #ff9900;
 
 @mixin uidu-button {
 	@extend .button;
-	@extend .radius;
-	@extend .small;
+	// @extend .radius;
+	// @extend .small;
 	background-color: $color;
 	 &:hover {
-	  background-color: lighten( $color, 10% ) 
+	  background-color: lighten( $color, 10% );
 	 }
-	 &>span {
+	 & > span {
 	 	margin-left: 0.4em;
 	 }
 }
