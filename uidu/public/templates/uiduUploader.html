@@ -3,12 +3,15 @@
   <fieldset>
     <legend id="legenda" data-content="legenda"></legend>
 
-    <div id="loadImage" class="button radius small fileinput-button">  
+    <div class="uidu-bottone fileinput-button">  
         <input type="file" id="fileUploader" class="file" name="fileUploader" />
         <i class="fi-upload"></i><span>Carica</span>
     </div>
-    <input id="cropButton" class="hide" type="button" data-value="cropButton">
-
+    <div id="cropBox" class="hide">
+      <div class="uidu-bottone" id="cropButton">  
+       <i class="fi-crop"></i><span data-content="cropButtonText"></span>
+      </div>
+    </div>
     <input type="hidden" id="crop_x" class="cropData" name="crop_x">
     <input type="hidden" id="crop_y" class="cropData" name="crop_y">
     <input type="hidden" id="crop_w" class="cropData" name="crop_w">

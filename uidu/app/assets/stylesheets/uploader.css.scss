@@ -1,15 +1,7 @@
 @import "foundation/variables";
 @import "foundation/components/global";
+@import "foundation/components/buttons";
 @import "foundation/components/progress-bars";
-
-.uidu-progress-bar {
-  @include progress-container;
-  @include radius(6px);
-  & > span {
-    @include progress-meter(orange);
-    @include radius(5px);
-  }
-}
 
 /****** Inizio hack fondamentale per JCrop con ZurbFoundation *******/
 #cropContainer img { 
@@ -17,3 +9,40 @@ max-width: inherit !important;
 }
 /****** Fine hack fondamentale per JCrop con ZurbFoundation *******/
 
+$color: orange;
+
+@mixin uidu-button {
+	@extend .button;
+	@extend .radius;
+	@extend .small;
+	background-color: $color;
+	 &:hover {
+	  background-color: lighten( $color, 10% ) 
+	 }
+	 &>span {
+	 	margin-left: 0.4em;
+	 }
+}
+
+.uidu-bottone, .uidu-bottone:focus, .uidu-bottone:hover{
+	@include uidu-button;
+}
+
+.uidu-progress-bar {
+  @include progress-container;
+  @include radius(6px);
+  clear: both;
+  & > span {
+    @include progress-meter($color);
+    @include radius(5px);
+  }
+}
+
+.uiduUploaderContainer p {
+	font-size: small;
+	margin: 0.4em;
+}
+
+#cropBox {
+	clear: both;
+}

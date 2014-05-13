@@ -5,7 +5,8 @@
 
   var $form, $progressBar, $container;
 
-  var idCrop = 'cropbox';
+  var idCropImage = 'cropImage';
+  var idCropbox = 'cropBox';
   var idPreview = 'preview';
 
   $.widget('uidu.uiduUploader', {
@@ -49,24 +50,19 @@
       }
     },
 
-    _showCropBox: function(showCropBox) {
-      if (showCropBox === true) {
-        $('#' + idCrop).removeClass('hide');
-        $('#cropButton').removeClass('hide');
-      } else {
-        $('#' + idCrop).addClass('hide');
-        $('#cropButton').addClass('hide');
-      }
+    _showCropBox: function() {
+      $('#' + idCropbox).removeClass('hide');
     },
 
+    _hideCropBox: function() {
+      $('#' + idCropbox).addClass('hide');
+    },
     _createCropBox: function() {
-      var $cropbox = jQuery('<div><img src="" alt="Immagine da ridimensionare" id="' + idCrop + '" ></div>');
-      $container.append($cropbox);
+      $container.append($('<div><img src="" alt="Immagine da ridimensionare" id="' + idCropImage + '" ></div>'));
     },
 
     _createPreview: function() {
-      var $preview = jQuery('<h4>Anteprima immagine</h4><div><img src="" alt="Immagine di anteprima" id="' + idPreview + '"></div>');
-      $container.append($preview);
+      $container.append($('<h4>Anteprima immagine</h4><div><img src="" alt="Immagine di anteprima" id="' + idPreview + '"></div>'));
     },
 
     _crop: function(event) {
@@ -104,11 +100,13 @@
       $form = self.element;
       jQuery('.uiduUploaderContainer').loadTemplate('/templates/uiduUploader.html', {
         legenda: self.options.legenda,
-        cropButton: self.options.testoBottoneCrop
+        cropButtonText: self.options.testoBottoneCrop
       }, {
         success: function() {
-          $progressBar = jQuery('<div class="uidu-progress-bar"><span class="meter" style="width: 0%"></span></div>');
-          $container = jQuery('#' + self.options.containerId);
+          $progressBar = $('<div class="uidu-progress-bar"><span class="meter" style="width: 0%"></span></div>');
+          $container = $('#' + self.options.containerId);
+
+
           // HTML5 enhancement
           $form.find('input[type=file]').attr('accept', self.options.allowedMimeTypes.join(','));
           // Setting rails attrs
@@ -125,7 +123,6 @@
             url: self.options.uploadUrl,
             dataType: 'json',
             add: function(e, data) {
-              $('#cropButton').addClass('hide');
 
               self._showFileName(false, data.files[0].name);
 
@@ -139,7 +136,7 @@
                 $('#loadingImageButton').remove();
               }
 
-              data.context = $('<input type="button" class="button" id="loadingImageButton"/>').attr('value', 'Carica immagine')
+              data.context = $('<input type="button" class="uidu-bottone" id="loadingImageButton" value="Carica immagine"/>')
                 .insertBefore($container)
                 .click(function(e) {
                   e.preventDefault();
@@ -158,7 +155,7 @@
               self._createPreview();
               jQuery.each(data.result.files, function(index, file) {
                 // preview e crop usano la immagine large
-                jQuery('#' + idPreview + ', #' + idCrop).attr('src', file.url_large);
+                jQuery('#' + idPreview + ', #' + idCropImage).attr('src', file.url_large);
 
                 var originalWidth = file.original_width;
                 var originalHeight = file.original_height;
@@ -167,14 +164,13 @@
                 var largeHeight = file.large_height;
                 var ratioForCropping = file.original_width / self.options.croppingImageWidth;
 
-                $('#' + idCrop).css({
+                $('#' + idCropImage).css({
                   width: self.options.croppingImageWidth + 'px',
                   height: self.options.croppingImageWidth / ratio + 'px'
                 });
 
-                self._showCropBox(self.options.enableCrop);
-
                 if (self.options.enableCrop === true) {
+                  self._showCropBox();
                   $('#' + idPreview).parent('div').css({
                     width: self.options.previewWidth + 'px',
                     height: self.options.previewWidth + 'px',
@@ -185,7 +181,7 @@
                     fileid: file.id
                   });
 
-                  jQuery('#' + idCrop).Jcrop({
+                  jQuery('#' + idCropImage).Jcrop({
                     bgColor: 'orange',
                     onChange: function(coords) {
                       self._updateCrop(coords, ratioForCropping);
@@ -200,6 +196,7 @@
                     maxSize: [self.options.selectionWidth, self.options.selectionHeight]
                   });
                 } else {
+                  self._hideCropBox();
                   $('#' + idPreview).css({
                     width: self.options.previewWidth + 'px'
                   });
