@@ -10,11 +10,12 @@ install:
 
 before_script:
         - npm install -g casperjs
-        - phantomjs --version; casperjs --version
-        - bower --version
+        - phantomjs --version; casperjs --version; bower --version
         - cd ./uidu
         - bundle install
-        - bower install jquery-file-upload
+        - bower install
+        - ls app/
+        - sleep 5
         - RAILS_ENV=test bundle exec rake --trace db:migrate test
         - ./script/rails server &
         - sleep 5
