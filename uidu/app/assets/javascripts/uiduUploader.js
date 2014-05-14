@@ -21,9 +21,7 @@
       containerId: 'cropContainer',
       legenda: 'Carica una immagine',
       testoBottoneCrop: 'Ritaglia',
-      allowedMimeTypes: ['image/png', 'image/gif', 'image/tiff', 'image/bmp', 'image/x-bmp',
-        'image/jpeg', 'image/pjpeg'
-      ],
+      allowedMimeTypes: ['png', 'gif', 'tiff', 'bmp', 'x-bmp', 'jpeg', 'pjpeg' ],
       model: 'user',
       uploadUrl: '/users'
     },
@@ -74,7 +72,7 @@
 
     _upload: function() {
       var formData = this.element.serialize();
-      $('#cropButton').trigger('upload', 'upload', {
+      $('#cropButton').trigger('upload', event, {
         key: formData
       });
     },
@@ -108,7 +106,8 @@
 
 
           // HTML5 enhancement
-          $form.find('input[type=file]').attr('accept', self.options.allowedMimeTypes.join(','));
+          var mimetypes = self.options.allowedMimeTypes.map(function (el) { return 'image/' + el; })
+          $form.find('input[type=file]').attr('accept', mimetypes.join(','));
           // Setting rails attrs
           $('#fileUploader').attr({
             'id': self.options.model + '_avatar',
@@ -122,7 +121,7 @@
           $form.fileupload({
             url: self.options.uploadUrl,
             dataType: 'json',
-            acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+            acceptFileTypes: new RegExp("(\.|\/)(" + self.options.allowedMimeTypes.join('|') + ")$", "i"),
             processQueue: [{
               action: 'validate',
               acceptFileTypes: '@',
@@ -194,7 +193,7 @@
                     overflow: 'hidden'
                   });
 
-                  $('#cropBox').trigger('fileid', 'fileid', {
+                  $('#cropButton').trigger('fileid', {
                     fileid: file.id
                   });
 
@@ -217,7 +216,7 @@
                   $('#' + idPreview).css({
                     width: self.options.previewWidth + 'px'
                   });
-                  self._upload();
+                  self._upload('upload');
                 }
               });
             }
