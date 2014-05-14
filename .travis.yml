@@ -14,7 +14,7 @@ before_script:
         - cd ./uidu
         - bundle install
         - bower install
-        - ls app/
+        - ls
         - sleep 5
         - RAILS_ENV=test bundle exec rake --trace db:migrate test
         - ./script/rails server &
