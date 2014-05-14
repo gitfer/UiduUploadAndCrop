@@ -19,3 +19,6 @@ public/system/users/avatars/
 
 *.glue
 public/uploads/
+
+app/bower_components/
+node_modules/

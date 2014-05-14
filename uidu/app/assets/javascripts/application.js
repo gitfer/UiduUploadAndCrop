@@ -13,7 +13,12 @@
 //= require jquery
 //= require jquery_ujs
 //= require foundation
-//= require jquery-fileupload/basic
+
+//= require jquery-file-upload/js/vendor/jquery.ui.widget
+//= require jquery-file-upload/js/jquery.iframe-transport
+//= require jquery-file-upload/js/jquery.fileupload
+//= require jquery-file-upload/js/jquery.fileupload-process
+//= require jquery-file-upload/js/jquery.fileupload-validate
 //= require_tree .
 
 $(function(){ $(document).foundation(); });

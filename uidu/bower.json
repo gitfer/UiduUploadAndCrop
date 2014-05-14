@@ -1,0 +1,21 @@
+{
+  "name": "uidu",
+  "version": "0.0.1",
+  "homepage": "https://github.com/gitfer/UiduUploadAndCrop",
+  "authors": [
+    "Federico Rota <federico.rota01@gmail.com>"
+  ],
+  "description": "uidu js deps",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery-file-upload": "~9.5.7"
+  }
+}

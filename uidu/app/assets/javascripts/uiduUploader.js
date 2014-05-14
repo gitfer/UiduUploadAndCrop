@@ -122,6 +122,12 @@
           $form.fileupload({
             url: self.options.uploadUrl,
             dataType: 'json',
+            acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+            processQueue: [{
+              action: 'validate',
+              acceptFileTypes: '@',
+              disabled: '@disableValidation'
+            }],
             add: function(e, data) {
 
               self._showFileName(false, data.files[0].name);
@@ -136,14 +142,25 @@
                 $('#loadingImageButton').remove();
               }
 
-              data.context = $('<input type="button" class="uidu-bottone" id="loadingImageButton" value="Carica immagine"/>')
-                .insertBefore($container)
-                .click(function(e) {
-                  e.preventDefault();
-                  $('.loadingStatus').remove();
-                  data.context = $('<p class="loadingStatus"/>').text('Caricamento in corso. Attendere prego...').replaceAll($(this));
-                  data.submit();
-                });
+              var $this = $(this);
+              var validation = data.process(function() {
+                return $this.fileupload('process', data);
+              });
+
+              validation.done(function() {
+
+                data.context = $('<input type="button" class="uidu-bottone" id="loadingImageButton" value="Carica immagine"/>')
+                  .insertBefore($container)
+                  .click(function(e) {
+                    e.preventDefault();
+                    $('.loadingStatus').remove();
+                    data.context = $('<p class="loadingStatus"/>').text('Caricamento in corso. Attendere prego...').replaceAll($(this));
+                    data.submit();
+                  });
+              });
+              validation.fail(function(data) {
+                console.log('Upload error: ' + data.files[0].error);
+              });
 
               $container.html('');
             },
@@ -203,14 +220,15 @@
                   self._upload();
                 }
               });
-            },
-            progressall: function(e, data) {
-              var progress = parseInt(data.loaded / data.total * 100, 10);
-              $progressBar.find('span.meter').css({
-                width: progress + '%',
-                textAlign: 'center'
-              }).text('Caricamento: ' + progress + '%');
             }
+          }).bind('fileuploadprocessalways', function(e, data) {
+            console.log("processalways");
+          }).bind('fileuploadprogressall', function(e, data) {
+            var progress = parseInt(data.loaded / data.total * 100, 10);
+            $progressBar.find('span.meter').css({
+              width: progress + '%',
+              textAlign: 'center'
+            }).text('Caricamento: ' + progress + '%');
           });
 
           $('#cropButton').on('click', function() {
