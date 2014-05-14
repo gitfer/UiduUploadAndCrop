@@ -67,14 +67,14 @@
 
     _crop: function(event) {
       var formData = this.element.serialize();
-      this._trigger('crop', event, {
+      $('#cropButton').trigger('crop', event, {
         key: formData
       });
     },
 
     _upload: function() {
       var formData = this.element.serialize();
-      this._trigger('upload', 'upload', {
+      $('#cropButton').trigger('upload', 'upload', {
         key: formData
       });
     },
@@ -194,7 +194,7 @@
                     overflow: 'hidden'
                   });
 
-                  self._trigger('fileid', 'fileid', {
+                  $('#cropBox').trigger('fileid', 'fileid', {
                     fileid: file.id
                   });
 
@@ -222,7 +222,7 @@
               });
             }
           }).bind('fileuploadprocessalways', function(e, data) {
-            console.log("processalways");
+            console.log('processalways');
           }).bind('fileuploadprogressall', function(e, data) {
             var progress = parseInt(data.loaded / data.total * 100, 10);
             $progressBar.find('span.meter').css({
