@@ -35,8 +35,7 @@ casper.test.begin('Uploader deve essere presente nella pagina', function suite(t
 casper.test.begin('Upload deve mostrare bottone di upload server side', function suite(test) {
 	casper.then(function() {
 		this.fill('form', uploadImage(), false);
-		// debug();
-		test.assertExists('input#loadingImageButton[value="Carica immagine"]', 'Il testo del bottone di upload è "Carica immagine"');
+		test.assertSelectorHasText('#loadingImageButton > span', 'Carica', 'Il testo del bottone di upload è "Carica"');
 		test.assertEquals(this.visible('#loadingImageButton'), true, 'Id del bottone di upload presente');
 	});
 
@@ -45,7 +44,7 @@ casper.test.begin('Upload deve mostrare bottone di upload server side', function
 	});
 });
 
-casper.test.begin('Crop', function suite(test) {
+casper.test.begin('Crop', function suite(test) {	
 	casper.then(function() {
 		casper.evaluate(function() {
 			$('form').uiduUploader({
@@ -58,9 +57,8 @@ casper.test.begin('Crop', function suite(test) {
 
 		this.click('#loadingImageButton');
 		casper.waitForResource(testImage, function() {
-			test.assertVisible('#cropButton', 'Id del bottone di crop presente');
-			test.assertSelectorHasText('#cropButton > span', 'Ritaglia', 'Il testo del bottone di crop è "Ritaglia"');
-
+			debug();
+			test.assertVisible('.jcrop-tracker', 'Id della immagine con area di crop presente');
 		});
 	});
 	casper.run(function() {
@@ -84,9 +82,7 @@ casper.test.begin('Upload senza crop', function suite(test) {
 
 		this.click('#loadingImageButton');
 		casper.waitForResource(testImage, function() {
-			debug();
-			test.assertEquals(this.exists('#cropButton'), true, 'Id del bottone di crop è presente');
-			test.assertEquals(this.visible('#cropButton'), false, 'Id del bottone di crop è presente ma non visibile');
+			test.assertTextExists('Caricamento terminato.', 'A caricamento terminato appare la scritta \"Caricamento terminato.\"');
 		});
 	});
 	casper.run(function() {
