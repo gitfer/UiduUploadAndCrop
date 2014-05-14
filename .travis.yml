@@ -6,10 +6,13 @@ before_install:
 
 install:
         - npm install -g grunt-cli
+        - npm install -g bower
 
 before_script:
+        - npm install -g casperjs
+        - phantomjs --version; casperjs --version
+        - bower --version
         - cd ./uidu
-        - npm install
         - bundle install
         - bower install jquery-file-upload
         - RAILS_ENV=test bundle exec rake --trace db:migrate test
