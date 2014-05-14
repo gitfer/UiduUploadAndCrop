@@ -11,7 +11,7 @@ before_script:
         - cd ./uidu
         - npm install
         - bundle install
-        - bower install
+        - bower install jquery-file-upload
         - RAILS_ENV=test bundle exec rake --trace db:migrate test
         - ./script/rails server &
         - sleep 5
