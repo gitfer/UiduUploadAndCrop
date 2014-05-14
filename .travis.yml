@@ -8,8 +8,8 @@ install:
         - npm install -g grunt-cli
 
 before_script:
-        - npm install
         - cd ./uidu
+        - npm install
         - bundle install
         - bower install
         - RAILS_ENV=test bundle exec rake --trace db:migrate test
