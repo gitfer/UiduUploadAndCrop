@@ -5,12 +5,7 @@
 
     <div class="uidu-bottone fileinput-button">  
         <input type="file" id="fileUploader" class="file" name="fileUploader" />
-        <i class="fi-upload"></i><span>Carica</span>
-    </div>
-    <div id="cropBox" class="hide">
-      <div class="uidu-bottone" id="cropButton">  
-       <i class="fi-crop"></i><span data-content="cropButtonText"></span>
-      </div>
+        <i class="fi-camera"></i><span>Seleziona</span>
     </div>
     <input type="hidden" id="crop_x" class="cropData" name="crop_x">
     <input type="hidden" id="crop_y" class="cropData" name="crop_y">
@@ -18,10 +13,7 @@
     <input type="hidden" id="crop_h" class="cropData" name="crop_h">
     <div id="cropContainer">
     </div>
+    <div id="uploaderError" data-alert class="alert-box alert radius hide">
+    </div>
   </fieldset>
 </div>
-<div class="small columns">
-  <div id="uploaderError" class="small columns">
-    <small></small>
-  </div>
-</div>  

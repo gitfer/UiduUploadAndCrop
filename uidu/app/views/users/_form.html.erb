@@ -29,32 +29,6 @@ $(function () {
         console.log("Upload subscriber", evt, data);
     });
 
-    $(document.body).on('crop', function (evt, data) {
-    $('<p id="cropStatusMessage" style="color: blue">Ritaglio immagine in corso. Attendere prego...</p>').insertAfter('#cropButton'); 
-        $.ajax({
-        type: "PUT",
-        contentType: "application/json",
-        url: "/users/"+$('#userId').val(),
-        data: JSON.stringify(
-        {
-            user: 
-            { 
-                  crop_x: $('#crop_x').val(),
-                  crop_y: $('#crop_y').val(),
-                  crop_w: $('#crop_w').val(),
-                  crop_h: $('#crop_h').val() 
-            },
-            _method: 'put'
-        })
-        })          
-        .done(function( msg )
-        {
-          $('#cropStatusMessage').css('color', 'green').text('Immagine ritagliata con successo').insertAfter('#cropButton');
-          var detailUrl = "<%= "#{request.original_url}" %>";
-          $('<p><a href="' + detailUrl.replace("new", msg.location.id) + '">Dettaglio</a></p>').insertAfter('#cropButton');
-            
-        });
-    });
 });
     
   </script>

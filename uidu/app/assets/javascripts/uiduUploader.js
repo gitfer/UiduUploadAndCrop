@@ -6,7 +6,6 @@
   var $form, $progressBar, $container;
 
   var idCropImage = 'cropImage';
-  var idCropbox = 'cropBox';
   var idPreview = 'preview';
 
   $.widget('uidu.uiduUploader', {
@@ -20,8 +19,7 @@
       croppingImageWidth: 100,
       containerId: 'cropContainer',
       legenda: 'Carica una immagine',
-      testoBottoneCrop: 'Ritaglia',
-      allowedMimeTypes: ['png', 'gif', 'tiff', 'bmp', 'x-bmp', 'jpeg', 'pjpeg' ],
+      allowedMimeTypes: ['png', 'gif', 'tiff', 'bmp', 'x-bmp', 'jpeg', 'pjpeg'],
       model: 'user',
       uploadUrl: '/users'
     },
@@ -48,13 +46,6 @@
       }
     },
 
-    _showCropBox: function() {
-      $('#' + idCropbox).removeClass('hide');
-    },
-
-    _hideCropBox: function() {
-      $('#' + idCropbox).addClass('hide');
-    },
     _createCropBox: function() {
       $container.append($('<div><img src="" alt="Immagine da ridimensionare" id="' + idCropImage + '" ></div>'));
     },
@@ -63,16 +54,9 @@
       $container.append($('<h4>Anteprima immagine</h4><div><img src="" alt="Immagine di anteprima" id="' + idPreview + '"></div>'));
     },
 
-    _crop: function(event) {
-      var formData = this.element.serialize();
-      $('#cropButton').trigger('crop', event, {
-        key: formData
-      });
-    },
-
     _upload: function() {
       var formData = this.element.serialize();
-      $('#cropButton').trigger('upload', event, {
+      $(this).trigger('upload', event, {
         key: formData
       });
     },
@@ -97,8 +81,7 @@
       var self = this;
       $form = self.element;
       jQuery('.uiduUploaderContainer').loadTemplate('/templates/uiduUploader.html', {
-        legenda: self.options.legenda,
-        cropButtonText: self.options.testoBottoneCrop
+        legenda: self.options.legenda
       }, {
         success: function() {
           $progressBar = $('<div class="uidu-progress-bar"><span class="meter" style="width: 0%"></span></div>');
@@ -106,8 +89,7 @@
 
 
           // HTML5 enhancement
-          var mimetypes = self.options.allowedMimeTypes.map(function (el) { return 'image/' + el; })
-          $form.find('input[type=file]').attr('accept', mimetypes.join(','));
+          $form.find('input[type=file]').attr('accept',  self.options.allowedMimeTypes.map(function (el) { return 'image/' + el; }).join(','));
           // Setting rails attrs
           $('#fileUploader').attr({
             'id': self.options.model + '_avatar',
@@ -131,12 +113,6 @@
 
               self._showFileName(false, data.files[0].name);
 
-              $progressBar.find('span.meter').css({
-                width: 0 + '%',
-                textAlign: 'center'
-              }).text('');
-              $progressBar.insertBefore($container);
-
               if ($('#loadingImageButton').length > 0) {
                 $('#loadingImageButton').remove();
               }
@@ -148,7 +124,12 @@
 
               validation.done(function() {
 
-                data.context = $('<input type="button" class="uidu-bottone" id="loadingImageButton" value="Carica immagine"/>')
+                $progressBar.find('span.meter').css({
+                  width: 0 + '%',
+                  textAlign: 'center'
+                }).text('');
+                $progressBar.insertBefore($container);
+                data.context = $('<button id="loadingImageButton" class="uidu-bottone"><i class="fi-upload"></i><span>Carica</span></button>')
                   .insertBefore($container)
                   .click(function(e) {
                     e.preventDefault();
@@ -158,7 +139,7 @@
                   });
               });
               validation.fail(function(data) {
-                console.log('Upload error: ' + data.files[0].error);
+                $('#uploaderError').removeClass('hide').text('Errore: ' + data.files[0].error);
               });
 
               $container.html('');
@@ -173,9 +154,7 @@
                 // preview e crop usano la immagine large
                 jQuery('#' + idPreview + ', #' + idCropImage).attr('src', file.url_large);
 
-                var originalWidth = file.original_width;
-                var originalHeight = file.original_height;
-                var ratio = originalWidth / originalHeight;
+                var ratio = file.original_width / file.original_height;
                 var largeWidth = file.large_width;
                 var largeHeight = file.large_height;
                 var ratioForCropping = file.original_width / self.options.croppingImageWidth;
@@ -186,14 +165,13 @@
                 });
 
                 if (self.options.enableCrop === true) {
-                  self._showCropBox();
                   $('#' + idPreview).parent('div').css({
                     width: self.options.previewWidth + 'px',
                     height: self.options.previewWidth + 'px',
                     overflow: 'hidden'
                   });
 
-                  $('#cropButton').trigger('fileid', {
+                  $(self).trigger('fileid', {
                     fileid: file.id
                   });
 
@@ -212,7 +190,6 @@
                     maxSize: [self.options.selectionWidth, self.options.selectionHeight]
                   });
                 } else {
-                  self._hideCropBox();
                   $('#' + idPreview).css({
                     width: self.options.previewWidth + 'px'
                   });
@@ -228,10 +205,6 @@
               width: progress + '%',
               textAlign: 'center'
             }).text('Caricamento: ' + progress + '%');
-          });
-
-          $('#cropButton').on('click', function() {
-            self._crop('crop');
           });
         }
       });
