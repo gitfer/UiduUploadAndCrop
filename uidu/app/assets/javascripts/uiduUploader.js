@@ -20,6 +20,8 @@
       containerId: 'cropContainer',
       legenda: 'Carica una immagine',
       allowedMimeTypes: ['png', 'gif', 'tiff', 'bmp', 'x-bmp', 'jpeg', 'pjpeg'],
+      maxNumberOfFiles: 1,
+      maxFileSize: 5000000,
       model: 'user',
       uploadUrl: '/users'
     },
@@ -89,7 +91,9 @@
 
 
           // HTML5 enhancement
-          $form.find('input[type=file]').attr('accept',  self.options.allowedMimeTypes.map(function (el) { return 'image/' + el; }).join(','));
+          $form.find('input[type=file]').attr('accept', self.options.allowedMimeTypes.map(function(el) {
+            return 'image/' + el;
+          }).join(','));
           // Setting rails attrs
           $('#fileUploader').attr({
             'id': self.options.model + '_avatar',
@@ -100,14 +104,51 @@
               'name': self.options.model + '[' + $(this).attr('name') + ']'
             });
           });
+          $.blueimp.fileupload.prototype.options.processQueue.push({
+            action: 'customValidate'
+          });
+          $.widget('blueimp.fileupload', $.blueimp.fileupload, {
+            processActions: {
+              maxFileSize: function(data, options) {
+                if (options.disabled) {
+                  return data;
+                }
+                var dfd = $.Deferred(),
+                  file = data.files[data.index];
+                if (self.options.maxFileSize < file.size) { //TODO: testa IE! 
+                  file.error = 'Immagine troppo grande.';
+                  dfd.rejectWith(this, [data]);
+                } else {
+                  dfd.resolveWith(this, [data]);
+                }
+                return dfd.promise();
+              },
+              validate: function(data, options) {
+                if (options.disabled) {
+                  return data;
+                }
+                var dfd = $.Deferred(),
+                  file = data.files[data.index];
+                if (!options.acceptFileTypes.test(file.type)) {
+                  file.error = 'Formato non supportato. (' + self.options.allowedMimeTypes.join(',') + ')';
+                  dfd.rejectWith(this, [data]);
+                } else {
+                  dfd.resolveWith(this, [data]);
+                }
+                return dfd.promise();
+              }
+            }
+          });
           $form.fileupload({
             url: self.options.uploadUrl,
             dataType: 'json',
-            acceptFileTypes: new RegExp("(\.|\/)(" + self.options.allowedMimeTypes.join('|') + ")$", "i"),
+            acceptFileTypes: new RegExp('(.|/)(' + self.options.allowedMimeTypes.join('|') + ')$', 'i'),
             processQueue: [{
               action: 'validate',
               acceptFileTypes: '@',
               disabled: '@disableValidation'
+            }, {
+              action: 'maxFileSize'
             }],
             add: function(e, data) {
 
@@ -119,11 +160,11 @@
 
               var $this = $(this);
               var validation = data.process(function() {
+                $('#uploaderError').addClass('hide').text('');
                 return $this.fileupload('process', data);
               });
 
               validation.done(function() {
-
                 $progressBar.find('span.meter').css({
                   width: 0 + '%',
                   textAlign: 'center'
@@ -139,7 +180,7 @@
                   });
               });
               validation.fail(function(data) {
-                $('#uploaderError').removeClass('hide').text('Errore: ' + data.files[0].error);
+                $('#uploaderError').removeClass('hide').text(data.files[0].error);
               });
 
               $container.html('');
