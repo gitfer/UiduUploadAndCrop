@@ -94,7 +94,6 @@
           $progressBar = $('<div class="uidu-progress-bar"><span class="meter" style="width: 0%"></span></div>');
           $container = $('#' + self.options.containerId);
 
-
           // HTML5 enhancement
           $form.find('input[type=file]').attr('accept', self.options.allowedMimeTypes.map(function(el) {
             return 'image/' + el;
@@ -118,7 +117,7 @@
                 var dfd = $.Deferred(),
                   file = data.files[data.index];
                 if (self.options.maxFileSize < file.size) { //TODO: testa IE! 
-                  file.error = 'Immagine troppo grande.';
+                  file.error = 'L\'immagine deve avere una dimensione inferiore ai 5MB.';
                   dfd.rejectWith(this, [data]);
                 } else {
                   dfd.resolveWith(this, [data]);
