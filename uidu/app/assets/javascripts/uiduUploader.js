@@ -184,7 +184,7 @@
                       .error(function(jqXHR, textStatus, errorThrown) {
                         data.context.text('');
                         self._showErrorMessage(JSON.parse(jqXHR.responseText).avatar.join(' '));
-                      })
+                      });
                   });
               });
               validation.fail(function(data) {
