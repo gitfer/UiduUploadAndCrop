@@ -43,7 +43,7 @@ class User < ActiveRecord::Base
   private
 
   def avatar_size_validation
-    errors[:avatar] << "should be less than 5MB" if avatar.size > 5.megabytes
+    errors[:avatar] << "L'immagine deve avere una dimensione inferiore ai 5MB" if avatar.size > 5.megabytes
   end
 
   def reprocess_avatar

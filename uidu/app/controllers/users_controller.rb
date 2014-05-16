@@ -12,7 +12,8 @@ class UsersController < ApplicationController
           format.json { render json: {files: [@user.to_jq_upload]}, status: :created, location: @user }
         end
       else
-        render :action => 'new'
+        format.html { render :action => "new" }
+        format.json { render :json => @user.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -27,7 +28,7 @@ class UsersController < ApplicationController
         format.json { render json: { status: :modified, location: @user } }
       else
         #render :action => 'edit'
-        format.json { render json: { status: :modified, location: @user } }
+        format.json { render :json => @user.errors, :status => :unprocessable_entity }
       end
     end
 

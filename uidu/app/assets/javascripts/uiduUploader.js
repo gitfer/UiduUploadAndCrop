@@ -62,7 +62,12 @@
         key: formData
       });
     },
-
+    _showErrorMessage: function(msg) {
+      $('#uploaderError').removeClass('hide').text(msg);
+    },
+    _clearErrorMessage: function() {
+      $('#uploaderError').text('').addClass('hide');
+    },
     _setOption: function(key, value) {
       switch (key) {
         case 'someValue':
@@ -103,9 +108,6 @@
             $(this).attr({
               'name': self.options.model + '[' + $(this).attr('name') + ']'
             });
-          });
-          $.blueimp.fileupload.prototype.options.processQueue.push({
-            action: 'customValidate'
           });
           $.widget('blueimp.fileupload', $.blueimp.fileupload, {
             processActions: {
@@ -160,7 +162,7 @@
 
               var $this = $(this);
               var validation = data.process(function() {
-                $('#uploaderError').addClass('hide').text('');
+                self._clearErrorMessage();
                 return $this.fileupload('process', data);
               });
 
@@ -176,11 +178,18 @@
                     e.preventDefault();
                     $('.loadingStatus').remove();
                     data.context = $('<p class="loadingStatus"/>').text('Caricamento in corso. Attendere prego...').replaceAll($(this));
-                    data.submit();
+                    data.submit()
+                      .success(function(result, textStatus, jqXHR) {
+                        self._clearErrorMessage();
+                      })
+                      .error(function(jqXHR, textStatus, errorThrown) {
+                        data.context.text('');
+                        self._showErrorMessage(JSON.parse(jqXHR.responseText).avatar.join(' '));
+                      })
                   });
               });
               validation.fail(function(data) {
-                $('#uploaderError').removeClass('hide').text(data.files[0].error);
+                self._showErrorMessage(data.files[0].error);
               });
 
               $container.html('');
@@ -238,15 +247,16 @@
                 }
               });
             }
-          }).bind('fileuploadprocessalways', function(e, data) {
-            console.log('processalways');
-          }).bind('fileuploadprogressall', function(e, data) {
-            var progress = parseInt(data.loaded / data.total * 100, 10);
-            $progressBar.find('span.meter').css({
-              width: progress + '%',
-              textAlign: 'center'
-            }).text('Caricamento: ' + progress + '%');
-          });
+          })
+            .bind('fileuploadprocessalways', function(e, data) {
+              console.log('processalways');
+            }).bind('fileuploadprogressall', function(e, data) {
+              var progress = parseInt(data.loaded / data.total * 100, 10);
+              $progressBar.find('span.meter').css({
+                width: progress + '%',
+                textAlign: 'center'
+              }).text('Caricamento: ' + progress + '%');
+            });
         }
       });
     },
