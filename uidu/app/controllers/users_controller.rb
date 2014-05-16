@@ -18,17 +18,14 @@ class UsersController < ApplicationController
   end
 
   def update
-    p "update"
     # raise params.inspect
     @user = User.find(params[:id])
-    p params[:user]
     respond_to do |format|
       if @user.update_attributes(params[:user])
         flash[:notice] = "Successfully updated user."
 
         format.json { render json: { status: :modified, location: @user } }
       else
-        p "edit update"
         #render :action => 'edit'
         format.json { render json: { status: :modified, location: @user } }
       end
