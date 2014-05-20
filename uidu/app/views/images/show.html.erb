@@ -1,0 +1,43 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Image:</b>
+  <h3>Originale con larghezza fissa e aspect ratio mantenuto</h3>
+  <p><%= image_tag @image.image.url() %></p>
+
+  <h3>Originale croppato</h3>
+  <p><%# image_tag @image.image.url(:original) %></p>
+
+  <h3>Originale croppato scalato via attributi html</h3>
+  <p><%# image_tag( @image.image.url(:original).to_s, :width => 40 )%></p>
+
+  <h3>Large</h3>
+  <p><%# image_tag @image.image.url(:large) %></p>
+
+  <h3>Thumb</h3>
+  <p><%# image_tag @image.image.url(:thumb) %></p>
+</p>
+
+<p>
+  <b>Title:</b>
+  <%= @image.title %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%= @image.description %>
+</p>
+
+<p>
+  <b>User:</b>
+  <%= @image.user_id %>
+</p>
+
+<p>
+  <b>Gallery:</b>
+  <%= @image.gallery_id %>
+</p>
+
+
+<%= link_to 'Edit', edit_image_path(@image) %> |
+<%= link_to 'Back', images_path %>

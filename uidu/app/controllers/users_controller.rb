@@ -15,20 +15,6 @@ class UsersController < ApplicationController
         format.json { render :json => @user.errors, :status => :unprocessable_entity }
       end
     end
-    # respond_to do |format|
-    #   if @user.save!
-    #     flash[:notice] = "Successfully created user."
-    #     # if params[:user][:avatar].blank?
-    #     #   redirect_to @user
-    #     # else
-    #     redirect_to user_path(@user)
-    #       # format.json { render json: {files: [@user.to_jq_upload]}, status: :created, location: @user }
-    #     # end
-    #   else
-    #     format.html { render :action => "new" }
-    #     format.json { render :json => @user.errors, :status => :unprocessable_entity }
-    #   end
-    # end
   end
 
   def upload_avatar
@@ -41,19 +27,14 @@ class UsersController < ApplicationController
   end
 
   def update
-    # raise params.inspect
     @user = User.find(params[:id])
-    respond_to do |format|
-      if @user.update_attributes(params[:user])
-        flash[:notice] = "Successfully updated user."
-
-        format.json { render json: { status: :modified, location: @user } }
-      else
-        #render :action => 'edit'
-        format.json { render :json => @user.errors, :status => :unprocessable_entity }
-      end
+    if @user.update_attributes(params[:user])
+      flash[:notice] = "Successfully updated user."
+      redirect_to @user
+    else
+      flash[:notice] = "Error."
+      redirect_to @user
     end
-
   end
 
   def index

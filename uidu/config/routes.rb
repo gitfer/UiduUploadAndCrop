@@ -1,7 +1,10 @@
 Uidu::Application.routes.draw do
+  resources :images
+
+
   resources :users do
     member do
-      post '/upload_avatar' => 'users#upload_avatar', :as => 'upload_avatar'
+      put '/upload_avatar' => 'users#upload_avatar', :as => 'upload_avatar'
     end
   end
 
