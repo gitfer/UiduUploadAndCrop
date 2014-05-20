@@ -1,5 +1,9 @@
 Uidu::Application.routes.draw do
-  resources :users
+  resources :users do
+    member do
+      post '/upload_avatar' => 'users#upload_avatar', :as => 'upload_avatar'
+    end
+  end
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

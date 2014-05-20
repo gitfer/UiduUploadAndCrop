@@ -1,35 +1,35 @@
-<%= form_for @user, :html => { :multipart => true, :id => "fileupload" } do |f| %>
+<%= form_for @user do |f| %>
    <%= errors_for(@user, "Opps, impossibile creare un nuovo utente").html_safe %>
-   <p>
+   <!-- <p>
           <input type="hidden" id="userId" name="id">
-   </p>
+   </p> -->
   <p>
     <%= f.label :name %><br />
     <%= f.text_field :name %>
   </p>
-  <p>
+  <!-- <p>
       <div class="uiduUploaderContainer"></div>
-  </p>
+  </p> -->
   <p>
     <div class="small columns">
         <%= f.submit "Salva" %>
     </div>
   </p>
-  <%= javascript_include_tag "uiduUploader" %>
+  <%# javascript_include_tag "uiduUploader" %>
   <script type="text/javascript" >
 
-$(function () {
-    var $fileupload = $('#fileupload').uiduUploader({enableCrop: true});
-    
-    $(document.body).on('fileid', function (evt, data) { 
-        $('#userId').val(data.fileid);
-    });
+    // $(function () {
+    //     var $fileupload = $('#fileupload').uiduUploader({enableCrop: true});
+        
+    //     $(document.body).on('fileid', function (evt, data) { 
+    //         $('#userId').val(data.fileid);
+    //     });
 
-    $(document.body).on('upload', function (evt, data) { 
-        console.log("Upload subscriber", evt, data);
-    });
+    //     $(document.body).on('upload', function (evt, data) { 
+    //         console.log("Upload subscriber", evt, data);
+    //     });
 
-});
+    // });
     
   </script>
 

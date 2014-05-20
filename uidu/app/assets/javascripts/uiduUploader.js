@@ -144,6 +144,7 @@
             url: self.options.uploadUrl,
             dataType: 'json',
             acceptFileTypes: new RegExp('(.|/)(' + self.options.allowedMimeTypes.join('|') + ')$', 'i'),
+            type: 'POST',
             processQueue: [{
               action: 'validate',
               acceptFileTypes: '@',

@@ -1,24 +1,25 @@
 require 'carrierwave/orm/activerecord'
+
 class User < ActiveRecord::Base
 
   mount_uploader :avatar, UiduAvatarUploader
 
-  attr_accessor :crop_x, :crop_y, :crop_w, :crop_h
-  attr_accessible :name, :avatar, :crop_x, :crop_y, :crop_w, :crop_h
+  # attr_accessor :crop_x, :crop_y, :crop_w, :crop_h
+  attr_accessible :name #, :avatar #, :crop_x, :crop_y, :crop_w, :crop_h
   # validates :name, presence: true
-  validate :avatar_size_validation
+  # validate :avatar_size_validation
 
-  after_update :reprocess_avatar, :if => :cropping?
+  # after_update :reprocess_avatar, :if => :cropping?
 
-  def cropping?
-    !crop_x.blank? && !crop_y.blank? && !crop_w.blank? && !crop_h.blank?
-  end
+  # def cropping?
+  #   !crop_x.blank? && !crop_y.blank? && !crop_w.blank? && !crop_h.blank?
+  # end
 
-  def avatar_geometry(style = nil)
-    @geometry ||= {}
-    # S3
-    @geometry[style] ||= { :width => MiniMagick::Image.open('public/' + avatar.url(style))[:width], :height => MiniMagick::Image.open('public/' + avatar.url(style))[:height] }
-  end
+  # def avatar_geometry(style = nil)
+  #   @geometry ||= {}
+  #   # S3
+  #   @geometry[style] ||= { :width => MiniMagick::Image.open('public/' + avatar.url(style))[:width], :height => MiniMagick::Image.open('public/' + avatar.url(style))[:height] }
+  # end
 
   include Rails.application.routes.url_helpers
   def to_jq_upload

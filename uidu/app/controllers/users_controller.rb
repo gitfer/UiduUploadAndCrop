@@ -2,18 +2,40 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(params[:user])
-
-    respond_to do |format|
-      if @user.save
-        flash[:notice] = "Successfully created user."
-        if params[:user][:avatar].blank?
+    if @user.save!
+      respond_to do |format|
+        format.html do
+          flash[:notice] = "Successfully created user."
           redirect_to @user
-        else
-          format.json { render json: {files: [@user.to_jq_upload]}, status: :created, location: @user }
         end
-      else
+      end
+    else
+      respond_to do |format|
         format.html { render :action => "new" }
         format.json { render :json => @user.errors, :status => :unprocessable_entity }
+      end
+    end
+    # respond_to do |format|
+    #   if @user.save!
+    #     flash[:notice] = "Successfully created user."
+    #     # if params[:user][:avatar].blank?
+    #     #   redirect_to @user
+    #     # else
+    #     redirect_to user_path(@user)
+    #       # format.json { render json: {files: [@user.to_jq_upload]}, status: :created, location: @user }
+    #     # end
+    #   else
+    #     format.html { render :action => "new" }
+    #     format.json { render :json => @user.errors, :status => :unprocessable_entity }
+    #   end
+    # end
+  end
+
+  def upload_avatar
+    @user = User.find(params[:id])
+    if @user.update_attributes(params[:user])
+      respond_to do |format|
+        format.json { render json: {files: [@user.to_jq_upload]}, status: :created, location: @user }
       end
     end
   end
