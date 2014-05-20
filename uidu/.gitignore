@@ -20,7 +20,7 @@ public/system/users/avatars/
 *.glue
 public/uploads/
 
-app/bower_components/
+app/assets/components/
 node_modules/
 
 debug.png
