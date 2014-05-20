@@ -40,7 +40,10 @@ class ImagesController < ApplicationController
   # POST /images
   # POST /images.json
   def create
-    @image = Image.new(params[:image])
+    raise params.inspect
+    @image = Image.find_by_id(params[:image][:id])
+    @image.update_attributes(params[:image])
+    # @image = Image.new(params[:image])
 
     respond_to do |format|
       if @image.save
@@ -49,6 +52,15 @@ class ImagesController < ApplicationController
       else
         format.html { render action: "new" }
         format.json { render json: @image.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def upload
+    @image = Image.new(params[:image])
+    if @image.update_attributes(params[:image])
+      respond_to do |format|
+        format.json { render json: {files: [@image.to_jq_upload]}, status: :created, location: @image }
       end
     end
   end

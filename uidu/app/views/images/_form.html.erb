@@ -1,4 +1,4 @@
-<%= form_for(@image) do |f| %>
+<%= form_for @image, :html => { :multipart => true, :id => "fileupload" } do |f| %>
   <% if @image.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@image.errors.count, "error") %> prohibited this image from being saved:</h2>
@@ -15,6 +15,9 @@
     <%= f.label :image %><br />
     <%= f.file_field :image %>
   </div>
+  <p>
+    <div class="uiduUploaderContainer"></div>
+  </p>
   <div class="field">
     <%= f.label :title %><br />
     <%= f.text_field :title %>
@@ -35,3 +38,24 @@
     <%= f.submit %>
   </div>
 <% end %>
+
+<%= javascript_include_tag "uiduUploader" %>
+<script type="text/javascript" >
+  $(function () {
+    var $fileupload = $('#fileupload').uiduUploader({
+      enableCrop: true,
+      model: 'image',
+      attribute: 'image',
+      uploadUrl: '<%= upload_images_path %>'
+    });
+
+    $(document.body).on('fileid', function (evt, data) {
+      console.log(data);
+      $('#userId').val(data.fileid);
+    });
+
+    $(document.body).on('upload', function (evt, data) {
+      console.log("Upload subscriber", evt, data);
+    });
+  });
+</script>

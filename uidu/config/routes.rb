@@ -1,6 +1,11 @@
 Uidu::Application.routes.draw do
-  resources :images
 
+
+  resources :images do
+    collection do
+      post '/upload' => 'images#upload', :as => 'upload'
+    end
+  end
 
   resources :users do
     member do

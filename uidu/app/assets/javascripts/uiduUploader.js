@@ -23,6 +23,7 @@
       maxNumberOfFiles: 1,
       maxFileSize: 5000000,
       model: 'user',
+      attribute: 'avatar',
       uploadUrl: '/users'
     },
 
@@ -100,8 +101,8 @@
           }).join(','));
           // Setting rails attrs
           $('#fileUploader').attr({
-            'id': self.options.model + '_avatar',
-            'name': self.options.model + '[avatar]'
+            'id': self.options.model + '_' + self.options.attribute + '',
+            'name': self.options.model + '[' + self.options.attribute + ']'
           });
           $('.cropData').each(function() {
             $(this).attr({
