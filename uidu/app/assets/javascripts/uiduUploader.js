@@ -8,6 +8,19 @@
   var idCropImage = 'cropImage';
   var idPreview = 'preview';
 
+  function UiduUploaderError(message) {
+    this.name = 'UiduUploaderError';
+    this.message = message;
+    this.stack = (new Error()).stack;
+  }
+  UiduUploaderError.prototype = new Error;
+
+  (function checkDependencies() {
+    if (typeof(jQuery.widget) !== 'function' || typeof(jQuery.blueimp) !== 'object' || typeof(jQuery.Jcrop) !== 'function') {
+      throw new UiduUploaderError('Dipendenze per il plugin di upload non soddisfatte.');
+    }
+  })();
+
   $.widget('uidu.uiduUploader', {
 
     options: {
