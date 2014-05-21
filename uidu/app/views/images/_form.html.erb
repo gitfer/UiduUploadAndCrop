@@ -11,9 +11,9 @@
     </div>
   <% end %>
 
-   <p>
-          <input type="hidden" id="imageId" name="id">
-   </p>
+  <p>
+    <input type="hidden" id="image_id" name="image[id]">
+  </p>
 <!--   <div class="field">
     <%= f.label :image %><br />
     <%= f.file_field :image %>
@@ -53,7 +53,7 @@
     });
 
     $('#fileupload').on('fileid', function (evt, data) {
-      $('#imageId').val(data.fileid);
+      $('#image_id').val(data.fileid);
     });
 
     $('#fileupload').on('upload', function (evt, data) {

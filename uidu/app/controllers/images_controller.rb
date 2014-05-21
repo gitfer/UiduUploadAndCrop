@@ -40,7 +40,6 @@ class ImagesController < ApplicationController
   # POST /images
   # POST /images.json
   def create
-    raise params.inspect
     @image = Image.find_by_id(params[:image][:id])
     @image.update_attributes(params[:image])
     # @image = Image.new(params[:image])
