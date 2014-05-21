@@ -11,11 +11,14 @@
     </div>
   <% end %>
 
-  <div class="field">
+   <p>
+          <input type="hidden" id="imageId" name="id">
+   </p>
+<!--   <div class="field">
     <%= f.label :image %><br />
     <%= f.file_field :image %>
   </div>
-  <p>
+ -->  <p>
     <div class="uiduUploaderContainer"></div>
   </p>
   <div class="field">
@@ -49,12 +52,11 @@
       uploadUrl: '<%= upload_images_path %>'
     });
 
-    $(document.body).on('fileid', function (evt, data) {
-      console.log(data);
-      $('#userId').val(data.fileid);
+    $('#fileupload').on('fileid', function (evt, data) {
+      $('#imageId').val(data.fileid);
     });
 
-    $(document.body).on('upload', function (evt, data) {
+    $('#fileupload').on('upload', function (evt, data) {
       console.log("Upload subscriber", evt, data);
     });
   });

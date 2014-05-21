@@ -59,7 +59,7 @@
 
     _upload: function() {
       var formData = this.element.serialize();
-      $(this).trigger('upload', event, {
+      $(this.element).trigger('upload', event, {
         key: formData
       });
     },
@@ -222,7 +222,7 @@
                     overflow: 'hidden'
                   });
 
-                  $(self).trigger('fileid', {
+                  $(self.element).trigger('fileid', {
                     fileid: file.id
                   });
 
