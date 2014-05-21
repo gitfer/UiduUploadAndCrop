@@ -36,7 +36,7 @@ class Image < ActiveRecord::Base
       "large_width" =>  image_geometry(:large)[:width],
       "large_height" =>  image_geometry(:large)[:height],
       "id" =>  self.id,
-      "delete_url" => user_path(self),
+      "delete_url" => image_path(self),
       "delete_type" => "DELETE"
     }
   end
