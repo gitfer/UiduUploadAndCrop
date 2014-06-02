@@ -257,6 +257,7 @@
                   $('#' + idPreview).css({
                     width: self.options.previewWidth + 'px'
                   });
+                  $('#' + idCropImage).hide();
                   self._upload('upload');
                 }
               });

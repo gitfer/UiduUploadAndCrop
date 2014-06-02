@@ -82,6 +82,7 @@ casper.test.begin('Upload senza crop', function suite(test) {
 
 		this.fill('form', uploadImage(), false);
 		test.assertEquals(this.exists('#loadingImageButton'), true, 'Id del bottone di upload presente');
+		test.assertNotVisible('#cropImage', 'La immagine per la selezione della area da croppare non è visibile');
 
 		this.click('#loadingImageButton');
 		casper.waitForResource(testImage, function() {
