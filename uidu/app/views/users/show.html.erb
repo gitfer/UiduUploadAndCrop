@@ -35,7 +35,12 @@
     <script type="text/javascript" >
       $(function () {
         var $fileupload = $('#fileupload').uiduUploader({
-          enableCrop: false,
+          enableCrop: true,
+          selectionWidth: 150,
+          selectionHeight: 150,
+          previewWidth: 150,
+          previewHeight: 150,
+          croppingImageWidth: 300,
           uploadUrl: '<%= upload_avatar_user_path(@user) %>'
         });
         // $(document.body).on('fileid', function (evt, data) {

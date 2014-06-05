@@ -6,16 +6,16 @@
   <p><%= image_tag @image.image.url() %></p>
 
   <h3>Originale croppato</h3>
-  <p><%# image_tag @image.image.url(:original) %></p>
+  <p><%= image_tag @image.image.url(:original) %></p>
 
   <h3>Originale croppato scalato via attributi html</h3>
-  <p><%# image_tag( @image.image.url(:original).to_s, :width => 40 )%></p>
+  <p><%= image_tag( @image.image.url(:original).to_s, :width => 40 )%></p>
 
   <h3>Large</h3>
-  <p><%# image_tag @image.image.url(:large) %></p>
+  <p><%= image_tag @image.image.url(:large) %></p>
 
   <h3>Thumb</h3>
-  <p><%# image_tag @image.image.url(:thumb) %></p>
+  <p><%= image_tag @image.image.url(:thumb) %></p>
 </p>
 
 <p>

@@ -41,11 +41,11 @@ class ImagesController < ApplicationController
   # POST /images.json
   def create
     @image = Image.find_by_id(params[:image][:id])
-    @image.update_attributes(params[:image])
+    # @image.update_attributes!(params[:image])
     # @image = Image.new(params[:image])
 
     respond_to do |format|
-      if @image.save
+      if @image.update_attributes(params[:image])
         format.html { redirect_to @image, notice: 'Image was successfully created.' }
         format.json { render json: @image, status: :created, location: @image }
       else

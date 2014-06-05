@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  before_filter :set_user, except: [:index, :new, :create]
 
   def create
     @user = User.new(params[:user])
@@ -18,7 +19,6 @@ class UsersController < ApplicationController
   end
 
   def upload_avatar
-    @user = User.find(params[:id])
     if @user.update_attributes(params[:user])
       respond_to do |format|
         format.json { render json: {files: [@user.to_jq_upload]}, status: :created, location: @user }
@@ -27,7 +27,6 @@ class UsersController < ApplicationController
   end
 
   def update
-    @user = User.find(params[:id])
     if @user.update_attributes(params[:user])
       flash[:notice] = "Successfully updated user."
       redirect_to @user
@@ -42,18 +41,23 @@ class UsersController < ApplicationController
   end
 
   def show
-    @user = User.find(params[:id])
   end
 
   def new
     @user = User.new
   end
 
+  def edit
+  end
+
   def destroy
-    @user = User.find(params[:id])
     @user.destroy
     flash[:notice] = "Successfully destroyed user."
     redirect_to users_url
   end
 
+  private
+  def set_user
+    @user = User.find(params[:id])
+  end
 end

@@ -1,22 +1,21 @@
-'use strict'
+'use strict';
 
-;
 (function($, window, document, undefined) {
 
-  var $form, $progressBar, $container;
-
-  var idCropImage = 'cropImage';
-  var idPreview = 'preview';
+  var $form, $progressBar, $container,
+      idCropImage = 'cropImage',
+      idPreview = 'preview';
 
   function UiduUploaderError(message) {
     this.name = 'UiduUploaderError';
     this.message = message;
     this.stack = (new Error()).stack;
   }
+
   UiduUploaderError.prototype = new Error;
 
   (function checkDependencies() {
-    if (typeof(jQuery.widget) !== 'function' || typeof(jQuery.blueimp) !== 'object' || typeof(jQuery.Jcrop) !== 'function') {
+    if (typeof($.widget) !== 'function' || typeof($.blueimp) !== 'object' || typeof($.Jcrop) !== 'function') {
       throw new UiduUploaderError('Dipendenze per il plugin di upload non soddisfatte.');
     }
   })();
@@ -30,8 +29,9 @@
       previewHeight: 200,
       enableCrop: false,
       croppingImageWidth: 100,
+      aspectRatio: 1,
       containerId: 'cropContainer',
-      legenda: 'Carica una immagine',
+      label: 'Carica una immagine',
       allowedMimeTypes: ['png', 'gif', 'tiff', 'bmp', 'x-bmp', 'jpeg', 'pjpeg'],
       maxNumberOfFiles: 1,
       maxFileSize: 5000000,
@@ -41,8 +41,8 @@
     },
 
     _updateCrop: function(coords, ratio) {
-      var rx = this.options.previewWidth / coords.w;
-      var ry = this.options.previewHeight / coords.h;
+      var rx = this.options.previewWidth / coords.w,
+          ry = this.options.previewHeight / coords.h;
       $('#' + idPreview).css({
         width: Math.round(rx * this.options.croppingImageWidth) + 'px',
         marginLeft: '-' + Math.round(rx * coords.x) + 'px',
@@ -101,8 +101,8 @@
     _create: function() {
       var self = this;
       $form = self.element;
-      jQuery('.uiduUploaderContainer').loadTemplate('/templates/uiduUploader.html', {
-        legenda: self.options.legenda
+      $('.uiduUploaderContainer').loadTemplate('/templates/uiduUploader.html', {
+        label: self.options.label
       }, {
         success: function() {
           $progressBar = $('<div class="uidu-progress-bar"><span class="meter" style="width: 0%"></span></div>');
@@ -187,20 +187,30 @@
                 }).text('');
                 $progressBar.insertBefore($container);
                 data.context = $('<button id="loadingImageButton" class="uidu-bottone"><i class="fi-upload"></i><span>Carica</span></button>')
-                  .insertBefore($container)
-                  .click(function(e) {
-                    e.preventDefault();
-                    $('.loadingStatus').remove();
-                    data.context = $('<p class="loadingStatus"/>').text('Caricamento in corso. Attendere prego...').replaceAll($(this));
-                    data.submit()
-                      .success(function(result, textStatus, jqXHR) {
-                        self._clearErrorMessage();
-                      })
-                      .error(function(jqXHR, textStatus, errorThrown) {
-                        data.context.text('');
-                        self._showErrorMessage(JSON.parse(jqXHR.responseText).avatar.join(' '));
-                      });
+                $('.loadingStatus').remove();
+                data.context = $('<p class="loadingStatus"/>').text('Caricamento in corso. Attendere prego...').replaceAll($('#loadingImageButton'));
+                data.submit()
+                  .success(function(result, textStatus, jqXHR) {
+                    self._clearErrorMessage();
+                  })
+                  .error(function(jqXHR, textStatus, errorThrown) {
+                    data.context.text('');
+                    self._showErrorMessage(JSON.parse(jqXHR.responseText).avatar.join(' '));
                   });
+                  // .insertBefore($container)
+                  // .click(function(e) {
+                  //   e.preventDefault();
+                  //   $('.loadingStatus').remove();
+                  //   data.context = $('<p class="loadingStatus"/>').text('Caricamento in corso. Attendere prego...').replaceAll($(this));
+                  //   data.submit()
+                  //     .success(function(result, textStatus, jqXHR) {
+                  //       self._clearErrorMessage();
+                  //     })
+                  //     .error(function(jqXHR, textStatus, errorThrown) {
+                  //       data.context.text('');
+                  //       self._showErrorMessage(JSON.parse(jqXHR.responseText).avatar.join(' '));
+                  //     });
+                  // });
               });
               validation.fail(function(data) {
                 self._showErrorMessage(data.files[0].error);
@@ -214,9 +224,9 @@
 
               self._createCropBox();
               self._createPreview();
-              jQuery.each(data.result.files, function(index, file) {
+              $.each(data.result.files, function(index, file) {
                 // preview e crop usano la immagine large
-                jQuery('#' + idPreview + ', #' + idCropImage).attr('src', file.url_large);
+                $('#' + idPreview + ', #' + idCropImage).attr('src', file.url_large);
 
                 var ratio = file.original_width / file.original_height;
                 var largeWidth = file.large_width;
@@ -231,7 +241,7 @@
                 if (self.options.enableCrop === true) {
                   $('#' + idPreview).parent('div').css({
                     width: self.options.previewWidth + 'px',
-                    height: self.options.previewWidth + 'px',
+                    height: self.options.previewHeight + 'px',
                     overflow: 'hidden'
                   });
 
@@ -239,8 +249,8 @@
                     fileid: file.id
                   });
 
-                  jQuery('#' + idCropImage).Jcrop({
-                    bgColor: 'orange',
+                  $('#' + idCropImage).Jcrop({
+                    bgColor: '#FFFFFF',
                     onChange: function(coords) {
                       self._updateCrop(coords, ratioForCropping);
                     },
@@ -248,10 +258,10 @@
                       self._updateCrop(coords, ratioForCropping);
                     },
                     setSelect: [largeWidth / 2 - self.options.selectionWidth / 2, largeHeight / 2 - self.options.selectionHeight / 2, self.options.selectionWidth, self.options.selectionHeight],
-                    aspectRatio: 1,
-                    allowResize: false,
-                    minSize: [self.options.selectionWidth, self.options.selectionHeight],
-                    maxSize: [self.options.selectionWidth, self.options.selectionHeight]
+                    aspectRatio: self.options.aspectRatio,
+                    allowResize: true,
+                    // minSize: [self.options.selectionWidth, self.options.selectionHeight]
+                    // maxSize: [self.options.selectionWidth, self.options.selectionHeight]
                   });
                 } else {
                   $('#' + idPreview).css({
@@ -263,29 +273,29 @@
               });
             }
           })
-            .bind('fileuploadprocessalways', function(e, data) {
-              console.log('processalways');
-            }).bind('fileuploadprogressall', function(e, data) {
-              var progress = parseInt(data.loaded / data.total * 100, 10);
-              $progressBar.find('span.meter').css({
-                width: progress + '%',
-                textAlign: 'center'
-              }).text('Caricamento: ' + progress + '%');
-            });
+          .on('fileuploadprocessalways', function(e, data) {
+            // console.log('processalways');
+          }).on('fileuploadprogressall', function(e, data) {
+            var progress = parseInt(data.loaded / data.total * 100, 10);
+            $progressBar.find('span.meter').css({
+              width: progress + '%',
+              textAlign: 'center'
+            }).text('Caricamento: ' + progress + '%');
+          });
         }
       });
     },
 
-    // Destroy an instantiated plugin and clean up 
+    // Destroy an instantiated plugin and clean up
     // modifications the widget has made to the DOM
     destroy: function() {
 
       // this.element.removeStuff();
-      // For UI 1.8, destroy must be invoked from the 
+      // For UI 1.8, destroy must be invoked from the
       // base widget
       $.Widget.prototype.destroy.call(this);
-      // For UI 1.9, define _destroy instead and don't 
-      // worry about 
+      // For UI 1.9, define _destroy instead and don't
+      // worry about
       // calling the base widget
     }
   });

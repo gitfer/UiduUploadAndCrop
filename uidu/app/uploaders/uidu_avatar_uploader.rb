@@ -51,7 +51,7 @@ class UiduAvatarUploader < CarrierWave::Uploader::Base
   # Create different versions of your uploaded files:
   version :thumb do
     p "thumb"
-    process :resize_to_fit => [50, nil]
+    process :resize_to_fit => [150, nil]
   end
 
   version :large do

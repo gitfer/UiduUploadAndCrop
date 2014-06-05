@@ -18,7 +18,8 @@
     <%= f.label :image %><br />
     <%= f.file_field :image %>
   </div>
- -->  <p>
+ -->
+  <p>
     <div class="uiduUploaderContainer"></div>
   </p>
   <div class="field">
@@ -49,7 +50,13 @@
       enableCrop: true,
       model: 'image',
       attribute: 'image',
-      uploadUrl: '<%= upload_images_path %>'
+      uploadUrl: '<%= upload_images_path %>',
+      selectionWidth: 800,
+      selectionHeight: 600,
+      previewWidth: 800,
+      previewHeight: 600,
+      aspectRatio: 4/3,
+      croppingImageWidth: 400
     });
 
     $('#fileupload').on('fileid', function (evt, data) {

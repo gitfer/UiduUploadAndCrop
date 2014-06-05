@@ -11,7 +11,7 @@ class Image < ActiveRecord::Base
   # validates :name, presence: true
   # validate :avatar_size_validation
 
-  after_update :reprocess_avatar, :if => :cropping?
+  after_update :reprocess_image, :if => :cropping?
 
   def cropping?
     !crop_x.blank? && !crop_y.blank? && !crop_w.blank? && !crop_h.blank?
@@ -47,7 +47,7 @@ class Image < ActiveRecord::Base
     errors[:image] << "L'immagine deve avere una dimensione inferiore ai 5MB" if image.size > 5.megabytes
   end
 
-  def reprocess_avatar
+  def reprocess_image
     image.recreate_versions!
   end
 end
