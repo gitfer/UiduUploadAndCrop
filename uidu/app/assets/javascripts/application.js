@@ -15,11 +15,11 @@
 //= require foundation
 
 //= require jquery-file-upload/js/vendor/jquery.ui.widget
-
+//= require jquery-file-upload/js/jquery.iframe-transport
 //= require jquery-file-upload/js/jquery.fileupload
 //= require jquery-file-upload/js/jquery.fileupload-process
 //= require jquery-file-upload/js/jquery.fileupload-validate
-//= require jquery-file-upload/js/jquery.iframe-transport
+//= require_tree .
 
 $(function(){ $(document).foundation(); });
 
@@ -96,6 +96,3 @@ if (!Array.prototype.map) {
     return A;
   };      
 }
-
-//= require_tree .
-
