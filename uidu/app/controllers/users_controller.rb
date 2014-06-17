@@ -20,9 +20,7 @@ class UsersController < ApplicationController
 
   def upload_avatar
     if @user.update_attributes(params[:user])
-      respond_to do |format|
-        format.json { render json: {files: [@user.to_jq_upload]}, status: :created, location: @user }
-      end
+      render json: {files: [@user.to_jq_upload]}, :content_type => request.format, status: :created, location: @user
     end
   end
 

@@ -175,6 +175,7 @@
               }
 
               var $this = $(this);
+              // TODO Make validation optional only for browser that support it
               var validation = data.process(function() {
                 self._clearErrorMessage();
                 return $this.fileupload('process', data);
