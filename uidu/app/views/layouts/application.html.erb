@@ -12,15 +12,28 @@
   	<!-- <meta http-equiv="X-UA-Compatible" content="IE=7" /> -->
 
   	<!-- Set the viewport width to device width for mobile -->
-  	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   	<title><%= content_for?(:title) ? yield(:title) : "Uidu prova" %></title>
-
-  	<%= stylesheet_link_tag    "application" %>
-    <%= javascript_include_tag "application" %>
-  	<%= javascript_include_tag "vendor/custom.modernizr" %>
+ 
+  <%= stylesheet_link_tag    "application" %>
+<%= javascript_include_tag "application" %>
+    <%= javascript_include_tag "vendor/custom.modernizr" %>
     <%= csrf_meta_tags %>
   <%= yield(:head) %>
+
+
+<script src="http://jcrop-cdn.tapmodo.com/v0.9.12/js/jquery.Jcrop.min.js"></script>
+  <script type="text/javascript">
+  jQuery(function($){
+
+    // How easy is this??
+    $('#target').Jcrop();
+
+  });
+
+</script>
+<link rel="stylesheet" href="/a/css/jquery.Jcrop.css" type="text/css" />
   </head>
 
   <body>
@@ -33,6 +46,8 @@
       <h1><%=h yield(:title) %></h1>
     <%- end -%>
 
+
+        <img src="/a/demos/demo_files/sago.jpg" id="target" alt="[Jcrop Example]" />
     <%= yield %>
 
     
