@@ -27,7 +27,7 @@ casper.test.begin('Uploader deve essere presente nella pagina', function suite(t
 	});
 
 	casper.then(function() {
-		test.assertTextExists('Carica una immagine', 'Legenda "Carica una immagine" visibile');
+		test.assertTextExists('', 'Legenda con testo "" visibile');
 	});
 
 	casper.run(function() {
@@ -39,8 +39,7 @@ casper.test.begin('Upload deve mostrare bottone di upload server side', function
 	casper.then(function() {
 		this.fill('form', uploadImage(), false);
 		debug();
-		test.assertSelectorHasText('#loadingImageButton > span', 'Carica', 'Il testo del bottone di upload è "Carica"');
-		test.assertEquals(this.visible('#loadingImageButton'), true, 'Id del bottone di upload presente');
+		test.assertSelectorHasText('div.uidu-bottone > span', 'Seleziona', 'Il testo del bottone di upload è "Seleziona"');
 	});
 
 	casper.run(function() {
@@ -57,12 +56,12 @@ casper.test.begin('Crop', function suite(test) {
 		});
 
 		this.fill('form', uploadImage(), false);
-		test.assertVisible('#loadingImageButton', 'Id del bottone di upload presente');
+		test.assertVisible('div.uidu-bottone > span', 'B di upload presente');
 
-		this.click('#loadingImageButton');
+		this.click('div.uidu-bottone > span');
 		casper.waitForResource(testImage, function() {
 			debug();
-			test.assertVisible('.jcrop-tracker', 'Id della immagine con area di crop presente');
+			test.assertVisible('.jcrop-tracker', 'Immagine con area di crop presente');
 		});
 	});
 	casper.run(function() {
@@ -81,12 +80,11 @@ casper.test.begin('Upload senza crop', function suite(test) {
 		});
 
 		this.fill('form', uploadImage(), false);
-		test.assertEquals(this.exists('#loadingImageButton'), true, 'Id del bottone di upload presente');
 		test.assertNotVisible('#cropImage', 'La immagine per la selezione della area da croppare non è visibile');
 
-		this.click('#loadingImageButton');
+		this.click('div.uidu-bottone > span');
 		casper.waitForResource(testImage, function() {
-			test.assertTextExists('Caricamento terminato.', 'A caricamento terminato appare la scritta \"Caricamento terminato.\"');
+			test.assertNotVisible('.jcrop-tracker', 'Immagine con area di crop non presente');
 		});
 
 	});
