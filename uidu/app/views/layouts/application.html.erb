@@ -21,19 +21,6 @@
     <%= javascript_include_tag "vendor/custom.modernizr" %>
     <%= csrf_meta_tags %>
   <%= yield(:head) %>
-
-
-<script src="http://jcrop-cdn.tapmodo.com/v0.9.12/js/jquery.Jcrop.min.js"></script>
-  <script type="text/javascript">
-  jQuery(function($){
-
-    // How easy is this??
-    $('#target').Jcrop();
-
-  });
-
-</script>
-<link rel="stylesheet" href="/a/css/jquery.Jcrop.css" type="text/css" />
   </head>
 
   <body>
@@ -46,8 +33,6 @@
       <h1><%=h yield(:title) %></h1>
     <%- end -%>
 
-
-        <img src="/a/demos/demo_files/sago.jpg" id="target" alt="[Jcrop Example]" />
     <%= yield %>
 
     
