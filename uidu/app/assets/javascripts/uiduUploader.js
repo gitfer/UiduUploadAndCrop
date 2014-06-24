@@ -16,7 +16,7 @@
   UiduUploaderError.prototype = new Error();
 
   (function checkDependencies() {
-    if (typeof ($.widget) !== 'function' || typeof ($.blueimp) !== 'object' || typeof ($.Jcrop) !== 'function') {
+    if (typeof ($.widget) !== 'function' || typeof ($.blueimp) !== 'object' ) {
       throw new UiduUploaderError('Dipendenze per il plugin di upload non soddisfatte.');
     }
   })();
@@ -42,17 +42,17 @@
     },
 
     _updateCrop: function(coords, ratio) {
-      var rx = this.options.previewWidth / coords.w,
-        ry = this.options.previewHeight / coords.h;
+      var rx = this.options.previewWidth / coords.width,
+        ry = this.options.previewHeight / coords.height;
       $('#' + idPreview).css({
         width: Math.round(rx * this.options.croppingImageWidth) + 'px',
-        marginLeft: '-' + Math.round(rx * coords.x) + 'px',
-        marginTop: '-' + Math.round(ry * coords.y) + 'px'
+        marginLeft: '-' + Math.round(rx * coords.x1) + 'px',
+        marginTop: '-' + Math.round(ry * coords.y1) + 'px'
       });
-      $('#crop_x').val(Math.round(coords.x * ratio));
-      $('#crop_y').val(Math.round(coords.y * ratio));
-      $('#crop_w').val(Math.round(coords.w * ratio));
-      $('#crop_h').val(Math.round(coords.h * ratio));
+      $('#crop_x').val(Math.round(coords.x1 * ratio));
+      $('#crop_y').val(Math.round(coords.y1 * ratio));
+      $('#crop_w').val(Math.round(coords.width * ratio));
+      $('#crop_h').val(Math.round(coords.height * ratio));
     },
 
     _showFileName: function(showFileName, fileName) {
@@ -68,7 +68,7 @@
     },
 
     _createPreview: function() {
-      $container.append($('<h4>Anteprima immagine</h4><div><img src="" alt="Immagine di anteprima" id="' + idPreview + '"></div>'));
+      $container.append($('<h4>Anteprima immagine</h4><div class="img-preview"><img src="" alt="Immagine di anteprima" id="' + idPreview + '"></div>'));
     },
 
     _upload: function() {
@@ -252,20 +252,20 @@
                     fileid: file.id
                   });
 
-                  $('#' + idCropImage).Jcrop({
-                    bgColor: '#FFFFFF',
-                    onChange: function(coords) {
+                  $('#' + idCropImage).cropper({
+                    done: function(coords) {
                       self._updateCrop(coords, ratioForCropping);
                     },
-                    onSelect: function(coords) {
-                      self._updateCrop(coords, ratioForCropping);
-                    },
-                    setSelect: [largeWidth / 2 - self.options.selectionWidth / 2, largeHeight / 2 - self.options.selectionHeight / 2, self.options.selectionWidth, self.options.selectionHeight],
+                    x1: largeWidth / 2 - self.options.selectionWidth / 2,
+                    y1: largeHeight / 2 - self.options.selectionHeight / 2,
+                    width: self.options.selectionWidth,
+                    height: self.options.selectionHeight,
                     aspectRatio: self.options.aspectRatio,
-                    allowResize: true
+                    preview: ".img-preview"
                     // minSize: [self.options.selectionWidth, self.options.selectionHeight]
                     // maxSize: [self.options.selectionWidth, self.options.selectionHeight]
                   });
+                  
                 } else {
                   $('#' + idPreview).css({
                     width: self.options.previewWidth + 'px'

@@ -19,6 +19,7 @@
 //= require jquery-file-upload/js/jquery.fileupload
 //= require jquery-file-upload/js/jquery.fileupload-process
 //= require jquery-file-upload/js/jquery.fileupload-validate
+//= require cropper/dist/cropper.min
 //= require_tree .
 
 $(function(){ $(document).foundation(); });
