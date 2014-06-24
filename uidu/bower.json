@@ -16,6 +16,7 @@
     "tests"
   ],
   "dependencies": {
-    "jquery-file-upload": "~9.5.7"
+    "jquery-file-upload": "~9.5.7",
+    "cropper": "*"
   }
 }
