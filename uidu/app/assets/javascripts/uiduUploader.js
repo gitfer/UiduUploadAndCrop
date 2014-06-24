@@ -1,10 +1,11 @@
-'use strict';
+/*jslint indent: 2 */
 
 (function($, window, document, undefined) {
+  'use strict';
 
   var $form, $progressBar, $container,
-      idCropImage = 'cropImage',
-      idPreview = 'preview';
+    idCropImage = 'cropImage',
+    idPreview = 'preview';
 
   function UiduUploaderError(message) {
     this.name = 'UiduUploaderError';
@@ -12,10 +13,10 @@
     this.stack = (new Error()).stack;
   }
 
-  UiduUploaderError.prototype = new Error;
+  UiduUploaderError.prototype = new Error();
 
   (function checkDependencies() {
-    if (typeof($.widget) !== 'function' || typeof($.blueimp) !== 'object' || typeof($.Jcrop) !== 'function') {
+    if (typeof ($.widget) !== 'function' || typeof ($.blueimp) !== 'object' || typeof ($.Jcrop) !== 'function') {
       throw new UiduUploaderError('Dipendenze per il plugin di upload non soddisfatte.');
     }
   })();
@@ -42,7 +43,7 @@
 
     _updateCrop: function(coords, ratio) {
       var rx = this.options.previewWidth / coords.w,
-          ry = this.options.previewHeight / coords.h;
+        ry = this.options.previewHeight / coords.h;
       $('#' + idPreview).css({
         width: Math.round(rx * this.options.croppingImageWidth) + 'px',
         marginLeft: '-' + Math.round(rx * coords.x) + 'px',
@@ -174,9 +175,9 @@
                 $('#loadingImageButton').remove();
               }
 
-              var $this = $(this);
+              var $this = $(this),
               // TODO Make validation optional only for browser that support it
-              var validation = data.process(function() {
+                validation = data.process(function() {
                 self._clearErrorMessage();
                 return $this.fileupload('process', data);
               });
@@ -187,7 +188,7 @@
                   textAlign: 'center'
                 }).text('');
                 $progressBar.insertBefore($container);
-                data.context = $('<button id="loadingImageButton" class="uidu-bottone"><i class="fi-upload"></i><span>Carica</span></button>')
+                data.context = $('<button id="loadingImageButton" class="uidu-bottone"><i class="fi-upload"></i><span>Carica</span></button>');
                 $('.loadingStatus').remove();
                 data.context = $('<p class="loadingStatus"/>').text('Caricamento in corso. Attendere prego...').replaceAll($('#loadingImageButton'));
                 data.submit()
@@ -214,6 +215,7 @@
                   // });
               });
               validation.fail(function(data) {
+                console.log(data);
                 self._showErrorMessage(data.files[0].error);
               });
 
@@ -229,10 +231,10 @@
                 // preview e crop usano la immagine large
                 $('#' + idPreview + ', #' + idCropImage).attr('src', file.url_large);
 
-                var ratio = file.original_width / file.original_height;
-                var largeWidth = file.large_width;
-                var largeHeight = file.large_height;
-                var ratioForCropping = file.original_width / self.options.croppingImageWidth;
+                var ratio = file.original_width / file.original_height,
+                    largeWidth = file.large_width,
+                    largeHeight = file.large_height,
+                    ratioForCropping = file.original_width / self.options.croppingImageWidth;
 
                 $('#' + idCropImage).css({
                   width: self.options.croppingImageWidth + 'px',
@@ -260,7 +262,7 @@
                     },
                     setSelect: [largeWidth / 2 - self.options.selectionWidth / 2, largeHeight / 2 - self.options.selectionHeight / 2, self.options.selectionWidth, self.options.selectionHeight],
                     aspectRatio: self.options.aspectRatio,
-                    allowResize: true,
+                    allowResize: true
                     // minSize: [self.options.selectionWidth, self.options.selectionHeight]
                     // maxSize: [self.options.selectionWidth, self.options.selectionHeight]
                   });
