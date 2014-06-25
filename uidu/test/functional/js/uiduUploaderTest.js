@@ -56,12 +56,12 @@ casper.test.begin('Crop', function suite(test) {
 		});
 
 		this.fill('form', uploadImage(), false);
-		test.assertVisible('div.uidu-bottone > span', 'B di upload presente');
+		test.assertVisible('div.uidu-bottone > span', 'Bottone di upload presente');
 
 		this.click('div.uidu-bottone > span');
 		casper.waitForResource(testImage, function() {
 			debug();
-			test.assertVisible('.jcrop-tracker', 'Immagine con area di crop presente');
+			test.assertVisible('.cropper-container > img', 'Immagine con area di crop presente');
 		});
 	});
 	casper.run(function() {
