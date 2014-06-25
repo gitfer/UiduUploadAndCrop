@@ -260,8 +260,10 @@
                     done: function(data) {
                       self._updateCrop(data, ratioForCropping);
                     },
-                    x1: largeWidth / 2 - self.options.selectionWidth / 2,
-                    y1: largeHeight / 2 - self.options.selectionHeight / 2,
+                    data: {
+                      x1: largeWidth / 2 - self.options.selectionWidth / 2,
+                      y1: largeHeight / 2 - self.options.selectionHeight / 2
+                    },
                     aspectRatio: self.options.aspectRatio,
                     preview: '.image-preview'
                     // minSize: [self.options.selectionWidth, self.options.selectionHeight]
