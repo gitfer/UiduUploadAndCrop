@@ -56,12 +56,21 @@
       }
     },
 
-    _createCropBox: function() {
+    _createCropBox: function(ratio) {
       $container.append($('<div class="cropper-container"><img src="" alt="Immagine da ridimensionare" ></div>'));
+
+      $('.cropper-container').css({
+        width: this.options.croppingImageWidth + 'px',
+        height: this.options.croppingImageWidth / ratio + 'px'
+      });
     },
 
     _createPreview: function() {
-      $container.append($('<h4>Anteprima immagine</h4><div class="image-preview" style="width:100px; height: 100px;"></div>'));
+      $container.append($('<h4>Anteprima immagine</h4><div class="image-preview"></div>'));
+      $('.image-preview').css({
+        width: this.options.previewWidth,
+        height: this.options.previewHeight
+      });
     },
 
     _upload: function() {
@@ -218,44 +227,40 @@
               data.context.text('Caricamento terminato.');
               $progressBar.remove();
 
-              self._createCropBox();
-              self._createPreview();
               $.each(data.result.files, function(index, file) {
-                // preview e crop usano la immagine orignal
-                $(idPreview + ',' + idCropImage).attr('src', file.url_original);
                 var ratio = file.original_width / file.original_height,
-                    largeWidth = file.large_width,
-                    largeHeight = file.large_height,
+                    originalWidth = file.original_width,
+                    originalHeight = file.original_height,
                     ratioForCropping = file.original_width / self.options.croppingImageWidth;
 
-                $('.cropper-container').css({
-                  width: self.options.croppingImageWidth + 'px',
-                  height: self.options.croppingImageWidth / ratio + 'px'
-                });
+                self._createCropBox(ratio);
+                self._createPreview();
+                // preview e crop usano la immagine orignal
+                $(idPreview + ',' + idCropImage).attr('src', file.url_original);
 
                 if (self.options.enableCrop === true) {
                 
                   $(self.element).trigger('fileid', {
                     fileid: file.id
                   });
+                  console.log('self.options.croppingImageWidth',self.options.croppingImageWidth)
+                  console.log('self.options.croppingImageWidth / 2 - self.options.selectionWidth / 2',self.options.croppingImageWidth / 2 - self.options.selectionWidth / 2)
+                  console.log('originalWidth / 2 - self.options.selectionWidth / 2', originalWidth / 2 - self.options.selectionWidth / 2)
                   $(idCropImage).cropper({
                     done: function(data) {
                       self._updateCrop(data, ratioForCropping);
                     },
                     data: {
-                      x1: largeWidth / 2 - self.options.selectionWidth / 2,
-                      y1: largeHeight / 2 - self.options.selectionHeight / 2
+                      x1: originalWidth / 2 - self.options.selectionWidth / 2,
+                      y1: originalHeight / 2 - self.options.selectionHeight / 2,
+                      width: self.options.selectionWidth,
+                      height: self.options.selectionHeight
                     },
                     aspectRatio: self.options.aspectRatio,
                     preview: '.image-preview'
-                    // minSize: [self.options.selectionWidth, self.options.selectionHeight]
-                    // maxSize: [self.options.selectionWidth, self.options.selectionHeight]
                   });
                   
                 } else {
-                  $(idPreview).css({
-                    width: self.options.previewWidth + 'px'
-                  });
                   $(idCropImage).hide();
                   self._upload('upload');
                 }
