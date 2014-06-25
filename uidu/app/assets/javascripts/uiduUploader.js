@@ -41,19 +41,7 @@
       uploadUrl: '/users'
     },
 
-    _updateCrop: function(coords, ratio) {
-      var rx = this.options.previewWidth / coords.width,
-        ry = this.options.previewHeight / coords.height;
-
-      // $('.image-preview').css({
-      //   width: this.options.previewWidth + 'px',
-      //   height: this.options.previewWidth / ratio + 'px'
-      // });
-      // $('#crop_x').val(Math.round(coords.x1 * ratio));
-      // $('#crop_y').val(Math.round(coords.y1 * ratio));
-      // $('#crop_w').val(Math.round(coords.width * ratio));
-      // $('#crop_h').val(Math.round(coords.height * ratio));
-
+    _updateCrop: function(coords) {
       $('#crop_x').val(Math.round(coords.x1));
       $('#crop_y').val(Math.round(coords.y1));
       $('#crop_w').val(Math.round(coords.width));
@@ -233,16 +221,8 @@
               self._createCropBox();
               self._createPreview();
               $.each(data.result.files, function(index, file) {
-                // preview e crop usano la immagine large
-
-                $( idCropImage).attr('src', file.url_original);
-                $( idPreview).attr('src', file.url_original);
-
-                // $('.cropper-container').css({
-                //   width: self.options.croppingImageWidth + 'px',
-                //   height: self.options.croppingImageWidth / ratio + 'px'
-                // });
-
+                // preview e crop usano la immagine orignal
+                $(idPreview + ',' + idCropImage).attr('src', file.url_original);
                 var ratio = file.original_width / file.original_height,
                     largeWidth = file.large_width,
                     largeHeight = file.large_height,
@@ -258,7 +238,6 @@
                   $(self.element).trigger('fileid', {
                     fileid: file.id
                   });
-                  console.log(file)
                   $(idCropImage).cropper({
                     done: function(data) {
                       self._updateCrop(data, ratioForCropping);
@@ -283,9 +262,7 @@
               });
             }
           })
-          .on('fileuploadprocessalways', function(e, data) {
-            // console.log('processalways');
-          }).on('fileuploadprogressall', function(e, data) {
+          .on('fileuploadprogressall', function(e, data) {
             var progress = parseInt(data.loaded / data.total * 100, 10);
             $progressBar.find('span.meter').css({
               width: progress + '%',
