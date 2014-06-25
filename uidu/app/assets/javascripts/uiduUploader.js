@@ -4,8 +4,8 @@
   'use strict';
 
   var $form, $progressBar, $container,
-    idCropImage = '.cropper-container img',
-    idPreview = '.image-preview img';
+    idCropImage = '.cropper-container > img',
+    idPreview = '.image-preview > img';
 
   function UiduUploaderError(message) {
     this.name = 'UiduUploaderError';
@@ -44,15 +44,22 @@
     _updateCrop: function(coords, ratio) {
       var rx = this.options.previewWidth / coords.width,
         ry = this.options.previewHeight / coords.height;
-      $('.image-preview img').css({
-        width: Math.round(rx * this.options.croppingImageWidth) + 'px',
-        marginLeft: '-' + Math.round(rx * coords.x1) + 'px',
-        marginTop: '-' + Math.round(ry * coords.y1) + 'px'
-      });
-      $('#crop_x').val(Math.round(coords.x1 * ratio));
-      $('#crop_y').val(Math.round(coords.y1 * ratio));
-      $('#crop_w').val(Math.round(coords.width * ratio));
-      $('#crop_h').val(Math.round(coords.height * ratio));
+
+        console.log('ratio', ratio)
+        console.log('coords', coords)
+      // $('.image-preview').css({
+      //   width: this.options.previewWidth + 'px',
+      //   height: this.options.previewWidth / ratio + 'px'
+      // });
+      // $('#crop_x').val(Math.round(coords.x1 * ratio));
+      // $('#crop_y').val(Math.round(coords.y1 * ratio));
+      // $('#crop_w').val(Math.round(coords.width * ratio));
+      // $('#crop_h').val(Math.round(coords.height * ratio));
+
+      $('#crop_x').val(Math.round(coords.x1));
+      $('#crop_y').val(Math.round(coords.y1));
+      $('#crop_w').val(Math.round(coords.width));
+      $('#crop_h').val(Math.round(coords.height));
     },
 
     _showFileName: function(showFileName, fileName) {
@@ -68,7 +75,7 @@
     },
 
     _createPreview: function() {
-      $container.append($('<h4>Anteprima immagine</h4><div class="image-preview"></div>'));
+      $container.append($('<h4>Anteprima immagine</h4><div class="image-preview" style="width:100px; height: 100px;"></div>'));
     },
 
     _upload: function() {
@@ -230,12 +237,13 @@
               $.each(data.result.files, function(index, file) {
                 // preview e crop usano la immagine large
 
-                $(idPreview + ',' + idCropImage).attr('src', file.url_large);
+                $( idCropImage).attr('src', file.url_original);
+                $( idPreview).attr('src', file.url_original);
 
-                $('.cropper-container').css({
-                  width: self.options.croppingImageWidth + 'px',
-                  height: self.options.croppingImageWidth / ratio + 'px'
-                });
+                // $('.cropper-container').css({
+                //   width: self.options.croppingImageWidth + 'px',
+                //   height: self.options.croppingImageWidth / ratio + 'px'
+                // });
 
                 var ratio = file.original_width / file.original_height,
                     largeWidth = file.large_width,
@@ -243,24 +251,17 @@
                     ratioForCropping = file.original_width / self.options.croppingImageWidth;
 
                 if (self.options.enableCrop === true) {
-                  $('.image-preview').css({
-                    width: self.options.previewWidth + 'px',
-                    height: self.options.previewHeight + 'px',
-                    overflow: 'hidden'
-                  });
-
+                
                   $(self.element).trigger('fileid', {
                     fileid: file.id
                   });
-
+                  console.log(file)
                   $(idCropImage).cropper({
-                    done: function(coords) {
-                      self._updateCrop(coords, ratioForCropping);
+                    done: function(data) {
+                      self._updateCrop(data, ratioForCropping);
                     },
                     x1: largeWidth / 2 - self.options.selectionWidth / 2,
                     y1: largeHeight / 2 - self.options.selectionHeight / 2,
-                    width: self.options.selectionWidth,
-                    height: self.options.selectionHeight,
                     aspectRatio: self.options.aspectRatio,
                     preview: '.image-preview'
                     // minSize: [self.options.selectionWidth, self.options.selectionHeight]
