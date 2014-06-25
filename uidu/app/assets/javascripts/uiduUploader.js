@@ -33,7 +33,7 @@
       aspectRatio: 1,
       containerId: 'cropContainer',
       label: 'Carica una immagine',
-      allowedMimeTypes: ['png', 'gif', 'tiff', 'bmp', 'x-bmp', 'jpeg', 'pjpeg'],
+      allowedMimeTypes: ['png', 'gif', 'tiff', 'bmp', 'x-bmp', 'jpeg', 'pjpeg', 'jpg'],
       maxNumberOfFiles: 1,
       maxFileSize: 5000000,
       model: 'user',
@@ -131,10 +131,15 @@
                 }
                 var dfd = $.Deferred(),
                   file = data.files[data.index];
-                if (self.options.maxFileSize < file.size) { //TODO: testa IE! 
-                  file.error = 'L\'immagine deve avere una dimensione inferiore ai 5MB.';
-                  dfd.rejectWith(this, [data]);
+                if (file.size !== undefined) {
+                  if (self.options.maxFileSize < file.size) {
+                    file.error = 'L\'immagine deve avere una dimensione inferiore ai 5MB.';
+                    dfd.rejectWith(this, [data]);
+                  } else {
+                    dfd.resolveWith(this, [data]);
+                  }
                 } else {
+                  // Should we try testing for file size in different ways for IE < 9?
                   dfd.resolveWith(this, [data]);
                 }
                 return dfd.promise();
@@ -145,11 +150,22 @@
                 }
                 var dfd = $.Deferred(),
                   file = data.files[data.index];
-                if (!options.acceptFileTypes.test(file.type)) {
-                  file.error = 'Formato non supportato. (' + self.options.allowedMimeTypes.join(',') + ')';
-                  dfd.rejectWith(this, [data]);
+                if (file.type !== undefined) {
+                  // FILE API is supported, we can check file attributes using blueimp methods
+                  if (!options.acceptFileTypes.test(file.type)) {
+                    file.error = 'Formato non supportato. (' + self.options.allowedMimeTypes.join(',') + ')';
+                    dfd.rejectWith(this, [data]);
+                  } else {
+                    dfd.resolveWith(this, [data]);
+                  }
                 } else {
-                  dfd.resolveWith(this, [data]);
+                  // IE < 9, we should check fily type by name
+                  if (!options.acceptFileTypes.test(file.name)) {
+                    file.error = 'Formato non supportato. (' + self.options.allowedMimeTypes.join(',') + ')';
+                    dfd.rejectWith(this, [data]);
+                  } else {
+                    dfd.resolveWith(this, [data]);
+                  }
                 }
                 return dfd.promise();
               }
@@ -175,8 +191,8 @@
                 $('#loadingImageButton').remove();
               }
 
-              var $this = $(this),
               // TODO Make validation optional only for browser that support it
+              var $this = $(this),
                 validation = data.process(function() {
                 self._clearErrorMessage();
                 return $this.fileupload('process', data);
@@ -215,7 +231,6 @@
                   // });
               });
               validation.fail(function(data) {
-                console.log(data);
                 self._showErrorMessage(data.files[0].error);
               });
 
@@ -252,19 +267,22 @@
                     fileid: file.id
                   });
 
-                  $('#' + idCropImage).Jcrop({
-                    bgColor: '#FFFFFF',
-                    onChange: function(coords) {
-                      self._updateCrop(coords, ratioForCropping);
-                    },
-                    onSelect: function(coords) {
-                      self._updateCrop(coords, ratioForCropping);
-                    },
-                    setSelect: [largeWidth / 2 - self.options.selectionWidth / 2, largeHeight / 2 - self.options.selectionHeight / 2, self.options.selectionWidth, self.options.selectionHeight],
-                    aspectRatio: self.options.aspectRatio,
-                    allowResize: true
-                    // minSize: [self.options.selectionWidth, self.options.selectionHeight]
-                    // maxSize: [self.options.selectionWidth, self.options.selectionHeight]
+                  $('#' + idCropImage).load(function() {
+                    $.Jcrop('#' + idCropImage, {
+                      bgColor: '#FFFFFF',
+                      onChange: function(coords) {
+                        self._updateCrop(coords, ratioForCropping);
+                      },
+                      onSelect: function(coords) {
+                        self._updateCrop(coords, ratioForCropping);
+                      },
+                      onRelease: function(coords) {
+                        self._updateCrop(coords, ratioForCropping);
+                      },
+                      setSelect: [largeWidth / 2 - self.options.selectionWidth / 2, largeHeight / 2 - self.options.selectionHeight / 2, self.options.selectionWidth, self.options.selectionHeight],
+                      aspectRatio: self.options.aspectRatio,
+                      allowResize: true
+                    });
                   });
                 } else {
                   $('#' + idPreview).css({
