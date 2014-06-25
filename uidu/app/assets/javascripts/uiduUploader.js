@@ -45,8 +45,6 @@
       var rx = this.options.previewWidth / coords.width,
         ry = this.options.previewHeight / coords.height;
 
-        console.log('ratio', ratio)
-        console.log('coords', coords)
       // $('.image-preview').css({
       //   width: this.options.previewWidth + 'px',
       //   height: this.options.previewWidth / ratio + 'px'
@@ -249,6 +247,11 @@
                     largeWidth = file.large_width,
                     largeHeight = file.large_height,
                     ratioForCropping = file.original_width / self.options.croppingImageWidth;
+
+                $('.cropper-container').css({
+                  width: self.options.croppingImageWidth + 'px',
+                  height: self.options.croppingImageWidth / ratio + 'px'
+                });
 
                 if (self.options.enableCrop === true) {
                 
