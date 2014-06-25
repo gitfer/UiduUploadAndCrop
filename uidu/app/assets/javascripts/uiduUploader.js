@@ -31,6 +31,7 @@
       enableCrop: false,
       croppingImageWidth: 100,
       aspectRatio: 1,
+      enableFreeSelection: false, // Nota: questa impostazione non impatta sulle dimensioni della preview
       containerId: 'cropContainer',
       legenda: '',
       allowedMimeTypes: ['png', 'gif', 'tiff', 'bmp', 'x-bmp', 'jpeg', 'pjpeg'],
@@ -243,7 +244,8 @@
                   $(self.element).trigger('fileid', {
                     fileid: file.id
                   });
-                  $(idCropImage).cropper({
+
+                  var opts = {
                     done: function(data) {
                       self._updateCrop(data, ratioForCropping);
                     },
@@ -253,12 +255,17 @@
                       width: self.options.selectionWidth,
                       height: self.options.selectionHeight
                     },
-                    aspectRatio: self.options.aspectRatio,
+                    aspectRatio: self.options.selectionWidth / self.options.selectionHeight,
                     preview: '.image-preview'
-                  });
+                  };
+                  if(self.options.enableFreeSelection)
+                    delete opts.aspectRatio;
+                  $(idCropImage).cropper(opts);
                   
                 } else {
-                  $(idCropImage).hide();
+                  $(idCropImage).parent('div').remove();
+                  // preview e crop usano la immagine orignal
+                  $('<img />').css({width: self.options.previewWidth, height: self.options.previewHeight}).attr('src', file.url_original).appendTo('.image-preview');
                   self._upload('upload');
                 }
               });

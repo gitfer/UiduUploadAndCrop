@@ -80,11 +80,11 @@ casper.test.begin('Upload senza crop', function suite(test) {
 		});
 
 		this.fill('form', uploadImage(), false);
-		test.assertNotVisible('#cropImage', 'La immagine per la selezione della area da croppare non è visibile');
+		test.assertNotVisible('.image-preview > img', 'La immagine per la selezione della area da croppare non è visibile');
 
 		this.click('div.uidu-bottone > span');
 		casper.waitForResource(testImage, function() {
-			test.assertNotVisible('.jcrop-tracker', 'Immagine con area di crop non presente');
+			test.assertDoesntExist('.cropper-container', 'Immagine con area di crop non presente');
 		});
 
 	});
