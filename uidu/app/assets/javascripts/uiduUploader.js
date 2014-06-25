@@ -32,7 +32,7 @@
       croppingImageWidth: 100,
       aspectRatio: 1,
       containerId: 'cropContainer',
-      label: 'Carica una immagine',
+      legenda: '',
       allowedMimeTypes: ['png', 'gif', 'tiff', 'bmp', 'x-bmp', 'jpeg', 'pjpeg'],
       maxNumberOfFiles: 1,
       maxFileSize: 5000000,
@@ -105,7 +105,7 @@
       var self = this;
       $form = self.element;
       $('.uiduUploaderContainer').loadTemplate('/templates/uiduUploader.html', {
-        label: self.options.label
+        legenda: self.options.legenda
       }, {
         success: function() {
           $progressBar = $('<div class="uidu-progress-bar"><span class="meter" style="width: 0%"></span></div>');
@@ -243,9 +243,6 @@
                   $(self.element).trigger('fileid', {
                     fileid: file.id
                   });
-                  console.log('self.options.croppingImageWidth',self.options.croppingImageWidth)
-                  console.log('self.options.croppingImageWidth / 2 - self.options.selectionWidth / 2',self.options.croppingImageWidth / 2 - self.options.selectionWidth / 2)
-                  console.log('originalWidth / 2 - self.options.selectionWidth / 2', originalWidth / 2 - self.options.selectionWidth / 2)
                   $(idCropImage).cropper({
                     done: function(data) {
                       self._updateCrop(data, ratioForCropping);
